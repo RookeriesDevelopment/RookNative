@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RookNative</string>
+    <string name="welcome">Welcome</string>
+    <string name="sign_in_to_continue">Sing In to continue</string>
+    <string name="sign_in">Sign In</string>
+    <string name="forget_password">Forget password?</string>
+    <string name="email">Email</string>
+</resources>
