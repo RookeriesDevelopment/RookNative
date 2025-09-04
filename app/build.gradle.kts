@@ -3,18 +3,19 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
     alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.org.jetbrains.kotlin.plugin.compose)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
     namespace = "io.tryrook.rooknative"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.tryrook.rooknative"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -53,10 +54,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-
     packaging {
         resources {
             excludes.addAll(
@@ -73,8 +70,8 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.navigation.compose)
+//    implementation(libs.androidx.navigation.ui.ktx)
+//    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.org.jetbrains.kotlinx.serialization.json)
     implementation(libs.com.jakewharton.timber)
@@ -93,9 +90,13 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+
     kapt(libs.com.google.dagger.hilt.android.compiler)
     implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
+//    implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.io.ktor.client.core)
     implementation(libs.io.ktor.client.cio)
