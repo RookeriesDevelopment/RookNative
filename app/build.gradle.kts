@@ -115,6 +115,11 @@ dependencies {
     implementation(files("$rootDir/libs/samsung-health-data-api-1.0.0-b2.aar"))
     implementation(libs.com.google.code.gson)
 
+    implementation(libs.cafe.adriel.voyager.navigator)
+    implementation(libs.cafe.adriel.voyager.transitions)
+    implementation(libs.cafe.adriel.voyager.hilt)
+    implementation(libs.cafe.adriel.voyager.tab.navigator)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)

@@ -4,14 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.PlusOne
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
+import io.tryrook.rooknative.feature.login.LoginScreenRoot
 import io.tryrook.rooknative.ui.theme.RookNativeTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,14 +32,23 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun MainContent() {
     RookNativeTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                Text("hello")
-            }
+        Surface {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                content = {
+                    Box(modifier = Modifier.padding(it)) {
+                        Navigator(LoginScreenRoot()) { navigator ->
+                            SlideTransition(navigator)
+                        }
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {},
+                        content = { Icon(Icons.Rounded.PlusOne, contentDescription = null) }
+                    )
+                }
+            )
         }
     }
 }
