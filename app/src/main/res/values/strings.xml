@@ -5,4 +5,8 @@
     <string name="sign_in">Sign In</string>
     <string name="forget_password">Forget password?</string>
     <string name="email">Email</string>
+    <string name="welcome_title">Unlock your</string>
+    <string name="welcome_title_2">potential</string>
+    <string name="welcome_subtitle">Take control of your health journey with the right tools at your fingertips.</string>
+    <string name="next">Next</string>
 </resources>
