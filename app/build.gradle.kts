@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.activity.compose)
     implementation(libs.io.coil.kt.coil.compose)
+    implementation(libs.androidx.compose.ui.text.google.fonts)
     implementation(libs.androidx.compose.material3.adaptive)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
