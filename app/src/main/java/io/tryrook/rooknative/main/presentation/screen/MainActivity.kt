@@ -10,7 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.tryrook.rooknative.feature.welcome.WelcomeScreen
+import io.tryrook.rooknative.feature.login.LoginScreenRoot
 import io.tryrook.rooknative.ui.theme.RookNativeTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 private fun MainContent() {
     RookNativeTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) {
-            WelcomeScreen()
+            LoginScreenRoot { }
         }
     }
 }

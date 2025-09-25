@@ -9,4 +9,6 @@
     <string name="welcome_title_2">potential</string>
     <string name="welcome_subtitle">Take control of your health journey with the right tools at your fingertips.</string>
     <string name="next">Next</string>
+    <string name="login_button">Enter your userID</string>
+    <string name="login_title">Get started</string>
 </resources>
