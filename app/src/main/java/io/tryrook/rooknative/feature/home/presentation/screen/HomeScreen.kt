@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.feature.home
+package io.tryrook.rooknative.feature.home.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.tryrook.rooknative.R
-import io.tryrook.rooknative.ui.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 
 @Composable
 fun HomeScreenRoot() {

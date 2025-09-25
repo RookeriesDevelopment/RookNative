@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.ui.theme
+package io.tryrook.rooknative.core.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

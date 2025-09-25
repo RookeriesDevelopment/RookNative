@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.feature.login
+package io.tryrook.rooknative.feature.login.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,7 @@ import io.tryrook.rooknative.core.presentation.component.HorizontalSpacer
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.extension.isPortrait
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
-import io.tryrook.rooknative.ui.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 
 @Composable
 fun LoginScreenRoot(toHome: () -> Unit) {

@@ -10,8 +10,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.tryrook.rooknative.feature.login.LoginScreenRoot
-import io.tryrook.rooknative.ui.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.feature.login.presentation.screen.LoginScreenRoot
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
