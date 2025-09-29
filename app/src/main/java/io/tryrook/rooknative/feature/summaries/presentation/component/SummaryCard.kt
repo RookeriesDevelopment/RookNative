@@ -27,6 +27,9 @@ import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 fun SummaryCard(modifier: Modifier = Modifier, @DrawableRes iconRes: Int, value: String) {
     ElevatedCard(
         modifier = modifier,
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 3.dp,
+        ),
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
