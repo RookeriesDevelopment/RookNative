@@ -6,7 +6,7 @@ core-ktx = "1.16.0"
 core-splashscreen = "1.0.1"
 lifecycle-runtime-ktx = "2.8.7"
 lifecycle-runtime-compose = "2.8.7"
-navigation = "2.8.9"
+#navigation = "2.8.9"
 compose-bom = "2025.08.01"
 activity-compose = "1.10.1"
 coil = "2.7.0"
@@ -22,6 +22,7 @@ browser = "1.8.0"
 kizitonwose-calendar-compose = "2.6.1"
 compose-material3-adaptive = "1.1.0"
 gson = "2.13.0"
+voyager = "1.1.0-beta03"
 # Testing
 junit = "4.13.2"
 ext-junit = "1.2.1"
@@ -48,8 +49,8 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "core-splashscreen" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-compose" }
-androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+#androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
+#androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
@@ -66,7 +67,7 @@ org-jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kot
 com-jakewharton-timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 com-google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 com-google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+#androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 com-rookmotion-android-rook-sdk = { module = "com.rookmotion.android:rook-sdk", version.ref = "rook-sdk" }
 io-tryrook-android-rook-sdk-samsung = { module = "io.tryrook.android:rook-sdk-samsung", version.ref = "rook-sdk-samsung" }
 io-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -81,6 +82,8 @@ androidx-browser = { module = "androidx.browser:browser", version.ref = "browser
 com-kizitonwose-calendar-compose = { module = "com.kizitonwose.calendar:compose", version.ref = "kizitonwose-calendar-compose" }
 androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "compose-material3-adaptive" }
 com-google-code-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+cafe-adriel-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+cafe-adriel-voyager-hilt = { module = "cafe.adriel.voyager:voyager-hilt", version.ref = "voyager" }
 # Testing
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "ext-junit" }

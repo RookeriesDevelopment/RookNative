@@ -27,7 +27,7 @@ fun SettingTile(
     @StringRes titleRes: Int,
     @DrawableRes iconRes: Int = R.drawable.ic_chevron_right,
     color: Color = MaterialTheme.colorScheme.onSurface,
-    onClick: () -> Unit = {},
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier.clickable { onClick() },
@@ -52,7 +52,7 @@ fun SettingTile(
 private fun SettingTilePreview() {
     RookNativeTheme {
         Surface {
-            SettingTile(titleRes = R.string.settings)
+            SettingTile(titleRes = R.string.settings, onClick = {})
         }
     }
 }

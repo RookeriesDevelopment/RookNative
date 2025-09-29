@@ -7,12 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowForwardIos
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,26 +23,41 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.presentation.component.NextButton
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.extension.isPortrait
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.feature.login.presentation.screen.LoginScreenDestination
 
-@Composable
-fun WelcomeScreen() {
-    val configuration = LocalConfiguration.current
+class WelcomeScreenDestination : Screen {
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
 
-    if (configuration.isPortrait()) {
-        WelcomeScreenPortrait()
-    } else {
-        WelcomeScreenLandScape()
+        WelcomeScreen(
+            navigateToLogin = { navigator.push(LoginScreenDestination()) },
+        )
     }
 }
 
 @Composable
-private fun WelcomeScreenPortrait() {
+fun WelcomeScreen(navigateToLogin: () -> Unit) {
+    val configuration = LocalConfiguration.current
+
+    if (configuration.isPortrait()) {
+        WelcomeScreenPortrait(navigateToLogin = navigateToLogin)
+    } else {
+        WelcomeScreenLandScape(navigateToLogin = navigateToLogin)
+    }
+}
+
+@Composable
+private fun WelcomeScreenPortrait(navigateToLogin: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -95,27 +104,13 @@ private fun WelcomeScreenPortrait() {
             style = MaterialTheme.typography.bodyLarge,
         )
         VerticalSpacer(of = 24.dp)
-        FilledIconButton(
-            modifier = Modifier.size(60.dp),
-            shape = MaterialTheme.shapes.large,
-            colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.inverseSurface,
-            ),
-            onClick = {},
-            content = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
-                    contentDescription = stringResource(R.string.next),
-                    tint = MaterialTheme.colorScheme.primaryContainer,
-                )
-            },
-        )
+        NextButton(onClick = navigateToLogin)
         Spacer(modifier = Modifier.weight(0.25F))
     }
 }
 
 @Composable
-private fun WelcomeScreenLandScape() {
+private fun WelcomeScreenLandScape(navigateToLogin: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -170,9 +165,7 @@ private fun WelcomeScreenLandScape() {
                 style = MaterialTheme.typography.bodyLarge,
             )
             VerticalSpacer(of = 24.dp)
-            NextButton(
-                onClick = {},
-            )
+            NextButton(onClick = navigateToLogin)
         }
     }
 }
@@ -182,7 +175,7 @@ private fun WelcomeScreenLandScape() {
 private fun WelcomePreview() {
     RookNativeTheme {
         Surface {
-            WelcomeScreen()
+            WelcomeScreen(navigateToLogin = { })
         }
     }
 }

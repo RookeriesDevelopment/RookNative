@@ -17,6 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.presentation.component.NextButton
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
@@ -24,6 +27,7 @@ import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 import io.tryrook.rooknative.feature.connections.domain.model.Connection
 import io.tryrook.rooknative.feature.connections.presentation.component.ConnectionTile
+import io.tryrook.rooknative.feature.home.presentation.screen.HomeScreenDestination
 
 val state = ConnectionsState(
     connections = buildList {
@@ -89,13 +93,25 @@ val state = ConnectionsState(
     }
 )
 
+data class ConnectionsScreenDestination(val disableNextButton: Boolean) : Screen {
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+
+        ConnectionsScreen(
+            disableNextButton = disableNextButton,
+            navigateToHome = { navigator.replace(HomeScreenDestination()) },
+        )
+    }
+}
+
 @Composable
-fun ConnectionsScreen() {
+fun ConnectionsScreen(disableNextButton: Boolean, navigateToHome: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .edgeToEdgePadding()
-            .padding(16.dp),
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.End,
     ) {
         Column(
@@ -115,8 +131,11 @@ fun ConnectionsScreen() {
                 ConnectionTile(connection = connection)
             }
         }
-        VerticalSpacer(of = 16.dp)
-        NextButton(onClick = {})
+        if (!disableNextButton) {
+            VerticalSpacer(of = 16.dp)
+            NextButton(onClick = navigateToHome)
+            VerticalSpacer(of = 8.dp)
+        }
     }
 }
 
@@ -125,7 +144,7 @@ fun ConnectionsScreen() {
 private fun ConnectionsPreview() {
     RookNativeTheme {
         Surface {
-            ConnectionsScreen()
+            ConnectionsScreen(disableNextButton = true, navigateToHome = {})
         }
     }
 }

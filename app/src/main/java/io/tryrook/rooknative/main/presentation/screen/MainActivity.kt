@@ -1,17 +1,15 @@
 package io.tryrook.rooknative.main.presentation.screen
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import cafe.adriel.voyager.navigator.Navigator
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
-import io.tryrook.rooknative.feature.home.presentation.screen.HomeScreen
+import io.tryrook.rooknative.feature.welcome.presentation.screen.WelcomeScreenDestination
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,12 +19,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun MainContent() {
     RookNativeTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) {
-            HomeScreen()
+        Surface {
+            Navigator(
+                screen = WelcomeScreenDestination(),
+            )
         }
     }
 }

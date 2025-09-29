@@ -19,12 +19,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.extension.isPortrait
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 import io.tryrook.rooknative.feature.summaries.presentation.component.SummaryCard
+
+class SummariesScreenDestination : Screen {
+    @Composable
+    override fun Content() {
+        SummariesScreen()
+    }
+}
 
 @Composable
 fun SummariesScreen() {
@@ -42,8 +50,7 @@ fun SummariesScreen() {
         modifier = Modifier
             .fillMaxSize()
             .edgeToEdgePadding()
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp),
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
     ) {
         Text(
             text = stringResource(R.string.summaries_title),

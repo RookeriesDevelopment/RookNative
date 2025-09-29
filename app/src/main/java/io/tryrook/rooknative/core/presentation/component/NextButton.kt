@@ -24,7 +24,7 @@ fun NextButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
         colors = IconButtonDefaults.filledIconButtonColors(
             containerColor = MaterialTheme.colorScheme.inverseSurface,
         ),
-        onClick = {},
+        onClick = onClick,
         content = {
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,

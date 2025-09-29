@@ -30,26 +30,45 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.presentation.component.HorizontalSpacer
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.extension.isPortrait
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.feature.connections.presentation.screen.ConnectionsScreenDestination
 
-@Composable
-fun LoginScreen() {
-    val configuration = LocalConfiguration.current
+class LoginScreenDestination : Screen {
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
 
-    if (configuration.isPortrait()) {
-        LoginScreenPortrait()
-    } else {
-        LoginScreenLandscape()
+        LoginScreen(
+            navigateToConnections = {
+                navigator.push(ConnectionsScreenDestination(disableNextButton = false))
+            },
+        )
     }
 }
 
 @Composable
-private fun LoginScreenPortrait() {
+fun LoginScreen(navigateToConnections: () -> Unit) {
+    val configuration = LocalConfiguration.current
+
+    if (configuration.isPortrait()) {
+        LoginScreenPortrait(navigateToConnections = navigateToConnections)
+    } else {
+        LoginScreenLandscape(navigateToConnections = navigateToConnections)
+    }
+}
+
+@Composable
+private fun LoginScreenPortrait(
+    navigateToConnections: () -> Unit,
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter,
@@ -88,7 +107,7 @@ private fun LoginScreenPortrait() {
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
-                        onClick = {},
+                        onClick = navigateToConnections,
                         content = {
                             Text(text = stringResource(R.string.next))
                             HorizontalSpacer(of = 8.dp)
@@ -106,7 +125,9 @@ private fun LoginScreenPortrait() {
 }
 
 @Composable
-private fun LoginScreenLandscape() {
+private fun LoginScreenLandscape(
+    navigateToConnections: () -> Unit,
+) {
     Row(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -143,7 +164,7 @@ private fun LoginScreenLandscape() {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
-                onClick = {},
+                onClick = navigateToConnections,
                 content = {
                     Text(text = stringResource(R.string.next))
                     HorizontalSpacer(of = 8.dp)
@@ -163,7 +184,7 @@ private fun LoginScreenLandscape() {
 private fun LoginPreview() {
     RookNativeTheme {
         Surface {
-            LoginScreen()
+            LoginScreen(navigateToConnections = {})
         }
     }
 }
