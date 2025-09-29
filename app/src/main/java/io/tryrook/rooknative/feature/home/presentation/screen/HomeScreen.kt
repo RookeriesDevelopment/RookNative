@@ -31,12 +31,7 @@ import io.tryrook.rooknative.feature.settings.presentation.screen.SettingsScreen
 import io.tryrook.rooknative.feature.summaries.presentation.screen.SummariesScreen
 
 @Composable
-fun HomeScreenRoot() {
-    HomeScreen()
-}
-
-@Composable
-private fun HomeScreen() {
+fun HomeScreen() {
     var selectedTab by rememberSaveable { mutableStateOf(HomeTab.SUMMARIES) }
 
     Column(

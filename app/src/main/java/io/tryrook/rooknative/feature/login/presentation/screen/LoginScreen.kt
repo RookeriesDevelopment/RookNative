@@ -38,12 +38,7 @@ import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 
 @Composable
-fun LoginScreenRoot(toHome: () -> Unit) {
-    LoginScreen(toHome = toHome)
-}
-
-@Composable
-private fun LoginScreen(toHome: () -> Unit) {
+fun LoginScreen() {
     val configuration = LocalConfiguration.current
 
     if (configuration.isPortrait()) {
@@ -168,9 +163,7 @@ private fun LoginScreenLandscape() {
 private fun LoginPreview() {
     RookNativeTheme {
         Surface {
-            LoginScreen(
-                toHome = {}
-            )
+            LoginScreen()
         }
     }
 }

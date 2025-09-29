@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
-import io.tryrook.rooknative.feature.home.presentation.screen.HomeScreenRoot
+import io.tryrook.rooknative.feature.home.presentation.screen.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 private fun MainContent() {
     RookNativeTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) {
-            HomeScreenRoot()
+            HomeScreen()
         }
     }
 }
