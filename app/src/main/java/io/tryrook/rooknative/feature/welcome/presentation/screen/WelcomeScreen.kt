@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import io.tryrook.rooknative.R
+import io.tryrook.rooknative.core.presentation.component.NextButton
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.extension.isPortrait
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
@@ -169,20 +170,8 @@ private fun WelcomeScreenLandScape() {
                 style = MaterialTheme.typography.bodyLarge,
             )
             VerticalSpacer(of = 24.dp)
-            FilledIconButton(
-                modifier = Modifier.size(60.dp),
-                shape = MaterialTheme.shapes.large,
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.inverseSurface,
-                ),
+            NextButton(
                 onClick = {},
-                content = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
-                        contentDescription = stringResource(R.string.next),
-                        tint = MaterialTheme.colorScheme.primaryContainer,
-                    )
-                },
             )
         }
     }
