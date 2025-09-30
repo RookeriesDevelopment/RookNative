@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
@@ -7,6 +10,9 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.com.google.dagger.hilt.android)
 }
+
+val localProperties = Properties()
+localProperties.load(FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace = "io.tryrook.rooknative"
@@ -18,6 +24,9 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "CLIENT_UUID", "\"${localProperties["clientUUID"]}\"")
+        buildConfigField("String", "SECRET_KEY", "\"${localProperties["secretKey"]}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
