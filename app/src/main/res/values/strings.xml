@@ -23,4 +23,9 @@
     <string name="summaries_subtitle">Move, rest, recharge and Repeat every day.</string>
     <string name="manage_connections">Manage Connections</string>
     <string name="logout">Log out</string>
+    <string name="error_user_id">The userID is not valid</string>
+    <string name="unknown_error">It broke, try again.</string>
+    <string name="network_error">There was an error with the network, try again.</string>
+    <string name="request_failed">The server failed to process your request, try again.</string>
+    <string name="rook_sdk_unauthorized">This link does not have the required permissions.</string>
 </resources>
