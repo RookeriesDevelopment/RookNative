@@ -29,7 +29,7 @@ class RookSamsungHealthRepository @Inject constructor(
     private val rookSamsung: RookSamsung,
 ) {
     @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.Q)
-    fun RookSamsung.isCompatible(): Boolean {
+    fun isCompatible(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
 
