@@ -64,7 +64,11 @@ object HealthModule {
     @Provides
     @Singleton
     fun provideRookSamsung(@ApplicationContext context: Context): RookSamsung {
-        return RookSamsung(context)
+        return RookSamsung(context).apply {
+            if (BuildConfig.DEBUG) {
+                enableLocalLogs()
+            }
+        }
     }
 
     @Provides
