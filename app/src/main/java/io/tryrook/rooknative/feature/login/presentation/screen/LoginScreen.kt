@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material3.Button
@@ -21,54 +23,100 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.tryrook.rooknative.R
+import io.tryrook.rooknative.core.framework.extension.toastLong
 import io.tryrook.rooknative.core.presentation.component.HorizontalSpacer
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.extension.isPortrait
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 import io.tryrook.rooknative.feature.connections.presentation.screen.ConnectionsScreenDestination
+import kotlinx.coroutines.flow.collectLatest
 
 class LoginScreenDestination : Screen {
     @Composable
     override fun Content() {
+        val context = LocalContext.current
+        val lifecycleOwner = LocalLifecycleOwner.current
         val navigator = LocalNavigator.currentOrThrow
 
+        val viewModel = getViewModel<LoginViewModel>()
+        val state by viewModel.uiState.collectAsStateWithLifecycle()
+        val inputState by viewModel.inputState.collectAsStateWithLifecycle()
+
+        LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collectLatest {
+                    when (it) {
+                        is LoginEvent.Error -> {
+                            context.toastLong(it.message.asString(context))
+                        }
+
+                        LoginEvent.LoggedIn -> {
+                            navigator.replaceAll(
+                                item = ConnectionsScreenDestination(disableNextButton = false)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         LoginScreen(
-            navigateToConnections = {
-                navigator.push(ConnectionsScreenDestination(disableNextButton = false))
-            },
+            state = state,
+            inputState = inputState,
+            onAction = viewModel::onAction,
         )
     }
 }
 
 @Composable
-fun LoginScreen(navigateToConnections: () -> Unit) {
+fun LoginScreen(
+    state: LoginState,
+    inputState: LoginInputState,
+    onAction: (LoginAction) -> Unit,
+) {
     val configuration = LocalConfiguration.current
 
     if (configuration.isPortrait()) {
-        LoginScreenPortrait(navigateToConnections = navigateToConnections)
+        LoginScreenPortrait(state = state, inputState = inputState, onAction = onAction)
     } else {
-        LoginScreenLandscape(navigateToConnections = navigateToConnections)
+        LoginScreenLandscape(state = state, inputState = inputState, onAction = onAction)
     }
 }
 
 @Composable
 private fun LoginScreenPortrait(
-    navigateToConnections: () -> Unit,
+    state: LoginState,
+    inputState: LoginInputState,
+    onAction: (LoginAction) -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter,
@@ -98,16 +146,29 @@ private fun LoginScreenPortrait(
                     VerticalSpacer(of = 24.dp)
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.loading,
                         shape = MaterialTheme.shapes.medium,
-                        value = "",
-                        onValueChange = {},
-                        label = { Text(text = stringResource(R.string.login_button)) }
+                        value = inputState.userID,
+                        onValueChange = { onAction(LoginAction.OnUserIDInput(it)) },
+                        label = { Text(text = stringResource(R.string.login_button)) },
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.None,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done,
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                onAction(LoginAction.OnNextClick)
+                            }
+                        )
                     )
                     VerticalSpacer(of = 20.dp)
                     Button(
                         modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.loading,
                         shape = MaterialTheme.shapes.medium,
-                        onClick = navigateToConnections,
+                        onClick = { onAction(LoginAction.OnNextClick) },
                         content = {
                             Text(text = stringResource(R.string.next))
                             HorizontalSpacer(of = 8.dp)
@@ -126,8 +187,12 @@ private fun LoginScreenPortrait(
 
 @Composable
 private fun LoginScreenLandscape(
-    navigateToConnections: () -> Unit,
+    state: LoginState,
+    inputState: LoginInputState,
+    onAction: (LoginAction) -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     Row(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -155,16 +220,29 @@ private fun LoginScreenLandscape(
             VerticalSpacer(of = 24.dp)
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
+                enabled = !state.loading,
                 shape = MaterialTheme.shapes.medium,
-                value = "",
-                onValueChange = {},
-                label = { Text(text = stringResource(R.string.login_button)) }
+                value = inputState.userID,
+                onValueChange = { onAction(LoginAction.OnUserIDInput(it)) },
+                label = { Text(text = stringResource(R.string.login_button)) },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        onAction(LoginAction.OnNextClick)
+                    }
+                )
             )
             VerticalSpacer(of = 20.dp)
             Button(
                 modifier = Modifier.fillMaxWidth(),
+                enabled = !state.loading,
                 shape = MaterialTheme.shapes.medium,
-                onClick = navigateToConnections,
+                onClick = { onAction(LoginAction.OnNextClick) },
                 content = {
                     Text(text = stringResource(R.string.next))
                     HorizontalSpacer(of = 8.dp)
@@ -184,7 +262,15 @@ private fun LoginScreenLandscape(
 private fun LoginPreview() {
     RookNativeTheme {
         Surface {
-            LoginScreen(navigateToConnections = {})
+            LoginScreen(
+                state = LoginState(
+                    loading = true,
+                ),
+                inputState = LoginInputState(
+                    userID = "1234567890",
+                ),
+                onAction = {},
+            )
         }
     }
 }

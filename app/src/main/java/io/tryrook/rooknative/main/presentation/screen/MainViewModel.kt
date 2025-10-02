@@ -25,8 +25,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     @IO private val dispatcher: CoroutineDispatcher,
     private val authRepository: AuthRepository,
-    private val rookHealthConnectRepository: RookHealthConnectRepository,
-    private val rookSamsungHealthRepository: RookSamsungHealthRepository,
+    private val healthConnectRepository: RookHealthConnectRepository,
+    private val samsungHealthRepository: RookSamsungHealthRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<MainState>(MainState())
@@ -54,7 +54,7 @@ class MainViewModel @Inject constructor(
             environment = SHEnvironment.SANDBOX,
         )
 
-        rookHealthConnectRepository.initRook(healthConnectConfiguration).fold(
+        healthConnectRepository.initRook(healthConnectConfiguration).fold(
             {
                 Timber.e("Error initializing Rook SDK: $it")
             },
@@ -63,7 +63,7 @@ class MainViewModel @Inject constructor(
             },
         )
 
-        rookSamsungHealthRepository.initRook(samsungHealthConfiguration).fold(
+        samsungHealthRepository.initRook(samsungHealthConfiguration).fold(
             {
                 Timber.e("Error initializing Rook Samsung SDK: $it")
             },
@@ -86,15 +86,15 @@ class MainViewModel @Inject constructor(
             return
         }
 
-        val healthConnectUser = rookHealthConnectRepository.getUserID()
-        val samsungHealthUser = rookSamsungHealthRepository.getUserID()
+        val healthConnectUser = healthConnectRepository.getUserID()
+        val samsungHealthUser = samsungHealthRepository.getUserID()
 
         val isHealthConnectUserCorrect = healthConnectUser == userID
         val isSamsungHealthUserCorrect = samsungHealthUser == userID
 
         // Edge case where the ids are not the same
         if (!isHealthConnectUserCorrect) {
-            rookHealthConnectRepository.updateUserID(userID).fold(
+            healthConnectRepository.updateUserID(userID).fold(
                 {
                     Timber.e("Error updating healthConnectUser: $it")
                 },
@@ -106,7 +106,7 @@ class MainViewModel @Inject constructor(
 
         // Edge case where the ids are not the same
         if (!isSamsungHealthUserCorrect) {
-            rookSamsungHealthRepository.updateUserID(userID).fold(
+            samsungHealthRepository.updateUserID(userID).fold(
                 {
                     Timber.e("Error updating samsungHealthUser: $it")
                 },
