@@ -15,9 +15,17 @@ import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 
 @Composable
-fun ConnectionButton(modifier: Modifier = Modifier, connected: Boolean, onClick: () -> Unit) {
+fun ConnectionButton(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = false,
+    connected: Boolean,
+    onConnect: () -> Unit,
+    onDisconnect: () -> Unit,
+) {
     Button(
         modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (connected) {
                 MaterialTheme.colorScheme.errorContainer
@@ -30,7 +38,13 @@ fun ConnectionButton(modifier: Modifier = Modifier, connected: Boolean, onClick:
                 Color.Black
             },
         ),
-        onClick = onClick,
+        onClick = {
+            if (connected) {
+                onDisconnect()
+            } else {
+                onConnect()
+            }
+        },
         content = {
             if (connected) {
                 Text(text = stringResource(R.string.disconnect))
@@ -47,8 +61,8 @@ private fun ConnectionButtonPreview() {
     RookNativeTheme {
         Surface {
             Column {
-                ConnectionButton(connected = true, onClick = {})
-                ConnectionButton(connected = false, onClick = {})
+                ConnectionButton(connected = true, onConnect = {}, onDisconnect = {})
+                ConnectionButton(connected = false, onConnect = {}, onDisconnect = {})
             }
         }
     }
