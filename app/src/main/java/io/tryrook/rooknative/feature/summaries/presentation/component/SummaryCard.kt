@@ -4,9 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -37,7 +38,7 @@ fun SummaryCard(modifier: Modifier = Modifier, @DrawableRes iconRes: Int, value:
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(vertical = 8.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,7 +60,11 @@ private fun SummaryCardPreview() {
     RookNativeTheme {
         Surface {
             Box(modifier = Modifier.padding(16.dp)) {
-                SummaryCard(iconRes = R.drawable.svg_sleep, value = "8 hrs")
+                SummaryCard(
+                    modifier = Modifier.width(100.dp),
+                    iconRes = R.drawable.svg_sleep,
+                    value = "8 hrs"
+                )
             }
         }
     }

@@ -71,4 +71,13 @@
     <string name="sh_not_ready">It seems that you haven\'t completed the onboarding process. Please complete it and try again.</string>
     <string name="open_samsung_health">Open Samsung Health</string>
     <string name="update">Update</string>
+    <string name="sleep_hrs">%1$s hrs</string>
+    <string name="samsung_health_summary">Samsung Health summary</string>
+    <string name="health_connect_summary">Health Connect summary</string>
+    <string name="android_summary">Android summary</string>
+    <string name="samsung_health_no_summary">Connect with Samsung Health to see your summary</string>
+    <string name="health_connect_no_summary">Connect with Health Connect to see your summary</string>
+    <string name="android_no_summary">Connect with Android to see your summary</string>
+    <string name="good_bye">Good bye!</string>
+    <string name="logout_error">Error logging out, try again</string>
 </resources>
