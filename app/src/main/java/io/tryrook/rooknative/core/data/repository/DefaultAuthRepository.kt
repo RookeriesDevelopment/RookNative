@@ -25,7 +25,7 @@ class DefaultAuthRepository(context: Context) : AuthRepository {
     override suspend fun logout() {
         delay(1.seconds) // Simulate Network delay
 
-        sharedPreferences.edit().remove(USER_ID_KEY).apply()
+        sharedPreferences.edit().clear()
     }
 }
 

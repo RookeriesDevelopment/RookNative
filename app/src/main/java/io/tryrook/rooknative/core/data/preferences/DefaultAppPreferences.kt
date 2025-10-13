@@ -30,11 +30,7 @@ class DefaultAppPreferences(context: Context) : AppPreferences {
     }
 
     override fun clear() {
-        val success = sharedPreferences.edit().clear().commit()
-
-        if (!success) {
-            throw IllegalStateException("Failed to clear app preferences")
-        }
+        sharedPreferences.edit { clear() }
     }
 }
 
