@@ -262,4 +262,4 @@ private val invalidApiDataSources = setOf(
     "Whoop", // This data source requires additional set up, check our docs for more details
 )
 
-private const val HOME_PAGE_URL = "https://extraction-app-user-bind.rook-connect.com/open-app"
+private const val HOME_PAGE_URL = "https://main.d1kx6n00xlijg7.amplifyapp.com/open-app"
