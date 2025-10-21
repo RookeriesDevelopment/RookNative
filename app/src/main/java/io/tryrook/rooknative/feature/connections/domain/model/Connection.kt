@@ -7,7 +7,7 @@ import io.tryrook.rooknative.R
 
 sealed interface Connection {
     data class Api(val name: String, val connected: Boolean, val iconUrl: String) : Connection {
-        val dataSourceType: DataSourceType?
+        val disconnectionType: DataSourceType?
             get() {
                 return when (name) {
                     "Oura" -> DataSourceType.OURA

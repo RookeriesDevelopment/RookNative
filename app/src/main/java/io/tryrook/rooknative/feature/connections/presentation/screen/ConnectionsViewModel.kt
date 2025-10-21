@@ -107,9 +107,9 @@ class ConnectionsViewModel @Inject constructor(
             is ConnectionsAction.OnDisconnectClick -> viewModelScope.launch(dispatcher) {
                 when (action.connection) {
                     is Connection.Api -> {
-                        val dataSourceType = action.connection.dataSourceType
+                        val disconnectionType = action.connection.disconnectionType
 
-                        if (dataSourceType == null) {
+                        if (disconnectionType == null) {
                             _events.send(ConnectionsEvent.DisconnectionNotSupported)
 
                             return@launch
@@ -117,7 +117,7 @@ class ConnectionsViewModel @Inject constructor(
 
                         _uiState.update { it.copy(loadingApiConnections = true) }
 
-                        apiHealthRepository.revokeDataSource(dataSourceType).fold(
+                        apiHealthRepository.revokeDataSource(disconnectionType).fold(
                             { error ->
                                 _uiState.update { it.copy(loadingApiConnections = false) }
                                 _events.send(
@@ -127,7 +127,7 @@ class ConnectionsViewModel @Inject constructor(
                                 )
                             },
                             {
-                                loadApiConnections(delay = 5.seconds)
+                                loadApiConnections(delay = 10.seconds)
                                 _events.send(ConnectionsEvent.Disconnected)
                             },
                         )
@@ -257,6 +257,9 @@ private val invalidApiDataSources = setOf(
     "Samsung Health",
     "Android",
     "Apple Health",
+    "Dexcom", // This data source requires additional set up, check our docs for more details
+    "Strava", // This data source requires additional set up, check our docs for more details
+    "Whoop", // This data source requires additional set up, check our docs for more details
 )
 
 private const val HOME_PAGE_URL = "https://extraction-app-user-bind.rook-connect.com/open-app"
