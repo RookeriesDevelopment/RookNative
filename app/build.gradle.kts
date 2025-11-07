@@ -79,8 +79,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
-//    implementation(libs.androidx.navigation.ui.ktx)
-//    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.org.jetbrains.kotlinx.serialization.json)
     implementation(libs.com.jakewharton.timber)
@@ -102,7 +100,6 @@ dependencies {
 
     kapt(libs.com.google.dagger.hilt.android.compiler)
     implementation(libs.com.google.dagger.hilt.android)
-//    implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.io.ktor.client.core)
     implementation(libs.io.ktor.client.cio)
