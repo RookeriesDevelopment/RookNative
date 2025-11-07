@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.main.presentation.screen
+package io.tryrook.rooknative.main.domain.model
 
 import io.tryrook.rooknative.main.domain.enums.UserSessionStatus
 

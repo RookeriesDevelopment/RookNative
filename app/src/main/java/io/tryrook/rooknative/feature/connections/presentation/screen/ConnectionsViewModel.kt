@@ -14,6 +14,9 @@ import io.tryrook.rooknative.core.framework.health.RookStepsRepository
 import io.tryrook.rooknative.core.presentation.extension.toUiText
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.feature.connections.domain.model.Connection
+import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsAction
+import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsEvent
+import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsState
 import io.tryrook.rooknative.feature.connections.domain.model.HealthKitType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async

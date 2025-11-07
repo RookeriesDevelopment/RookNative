@@ -1,6 +1,4 @@
-package io.tryrook.rooknative.feature.connections.presentation.screen
-
-import io.tryrook.rooknative.feature.connections.domain.model.Connection
+package io.tryrook.rooknative.feature.connections.domain.model
 
 data class ConnectionsState(
     val loadingApiConnections: Boolean = false,

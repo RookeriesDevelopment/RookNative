@@ -1,7 +1,6 @@
-package io.tryrook.rooknative.feature.connections.presentation.screen
+package io.tryrook.rooknative.feature.connections.domain.model
 
 import io.tryrook.rooknative.core.presentation.text.UIText
-import io.tryrook.rooknative.feature.connections.domain.model.HealthKitType
 
 sealed interface ConnectionsEvent {
     data class HealthKitConnectionRequest(val healthKitType: HealthKitType) : ConnectionsEvent

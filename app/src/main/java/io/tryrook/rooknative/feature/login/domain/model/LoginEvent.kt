@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.feature.login.presentation.screen
+package io.tryrook.rooknative.feature.login.domain.model
 
 import io.tryrook.rooknative.core.presentation.text.UIText
 

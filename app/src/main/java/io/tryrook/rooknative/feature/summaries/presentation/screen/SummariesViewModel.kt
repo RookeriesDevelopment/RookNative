@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.tryrook.rooknative.di.IO
+import io.tryrook.rooknative.feature.summaries.domain.model.SummariesAction
+import io.tryrook.rooknative.feature.summaries.domain.model.SummariesState
 import io.tryrook.rooknative.feature.summaries.domain.usecase.GetAndroidSummaryUseCase
 import io.tryrook.rooknative.feature.summaries.domain.usecase.GetHealthConnectSummaryUseCase
 import io.tryrook.rooknative.feature.summaries.domain.usecase.GetSamsungHealthSummaryUseCase

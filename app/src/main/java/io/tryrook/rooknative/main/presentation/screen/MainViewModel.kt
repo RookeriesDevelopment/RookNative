@@ -11,6 +11,7 @@ import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
 import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.main.domain.enums.UserSessionStatus
+import io.tryrook.rooknative.main.domain.model.MainState
 import io.tryrook.sdk.samsung.domain.environment.SHEnvironment
 import io.tryrook.sdk.samsung.domain.model.SHConfiguration
 import kotlinx.coroutines.CoroutineDispatcher

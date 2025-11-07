@@ -1,6 +1,4 @@
-package io.tryrook.rooknative.feature.summaries.presentation.screen
-
-import io.tryrook.rooknative.feature.summaries.domain.model.Summary
+package io.tryrook.rooknative.feature.summaries.domain.model
 
 data class SummariesState(
     val loading: Boolean = true,

@@ -40,6 +40,9 @@ import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 import io.tryrook.rooknative.feature.androidsteps.presentation.screen.AndroidStepsScreenDestination
+import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsAction
+import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsEvent
+import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsState
 import io.tryrook.rooknative.feature.connections.domain.model.HealthKitType
 import io.tryrook.rooknative.feature.connections.presentation.component.ApiConnectionTile
 import io.tryrook.rooknative.feature.connections.presentation.component.HealthKitConnectionTile

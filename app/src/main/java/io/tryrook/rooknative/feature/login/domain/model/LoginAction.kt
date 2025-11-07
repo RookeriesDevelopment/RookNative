@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.feature.login.presentation.screen
+package io.tryrook.rooknative.feature.login.domain.model
 
 sealed interface LoginAction {
     data class OnUserIDInput(val userID: String) : LoginAction

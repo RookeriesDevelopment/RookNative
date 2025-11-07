@@ -11,6 +11,8 @@ import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
 import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
 import io.tryrook.rooknative.core.framework.health.RookStepsRepository
 import io.tryrook.rooknative.di.IO
+import io.tryrook.rooknative.feature.settings.domain.model.SettingsAction
+import io.tryrook.rooknative.feature.settings.domain.model.SettingsEvent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

@@ -18,6 +18,7 @@ import io.tryrook.rooknative.feature.home.presentation.screen.HomeScreenDestinat
 import io.tryrook.rooknative.feature.postsplash.presentation.screen.PostSplashScreenDestination
 import io.tryrook.rooknative.feature.welcome.presentation.screen.WelcomeScreenDestination
 import io.tryrook.rooknative.main.domain.enums.UserSessionStatus
+import io.tryrook.rooknative.main.domain.model.MainState
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
