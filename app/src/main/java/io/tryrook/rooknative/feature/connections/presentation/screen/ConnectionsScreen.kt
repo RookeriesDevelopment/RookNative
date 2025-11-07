@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,9 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -39,6 +36,7 @@ import io.tryrook.rooknative.core.presentation.component.PullToRefresh
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.util.CollectEventsWithLifeCycle
 import io.tryrook.rooknative.feature.androidsteps.presentation.screen.AndroidStepsScreenDestination
 import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsAction
 import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsEvent
@@ -49,59 +47,52 @@ import io.tryrook.rooknative.feature.connections.presentation.component.HealthKi
 import io.tryrook.rooknative.feature.healthconnect.presentation.screen.HealthConnectScreenDestination
 import io.tryrook.rooknative.feature.home.presentation.screen.HomeScreenDestination
 import io.tryrook.rooknative.feature.samsunghealth.presentation.screen.SamsungHealthScreenDestination
-import kotlinx.coroutines.flow.collectLatest
 
 data class ConnectionsScreenDestination(val disableNextButton: Boolean) : Screen {
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val lifecycleOwner = LocalLifecycleOwner.current
         val navigator = LocalNavigator.currentOrThrow
 
         val viewModel = getViewModel<ConnectionsViewModel>()
         val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest {
-
-                    when (it) {
-                        is ConnectionsEvent.HealthKitConnectionRequest -> {
-                            when (it.healthKitType) {
-                                HealthKitType.HEALTH_CONNECT -> {
-                                    navigator.push(HealthConnectScreenDestination())
-                                }
-
-                                HealthKitType.SAMSUNG_HEALTH -> {
-                                    navigator.push(SamsungHealthScreenDestination())
-                                }
-
-                                HealthKitType.ANDROID_STEPS -> {
-                                    navigator.push(AndroidStepsScreenDestination())
-                                }
-                            }
+        CollectEventsWithLifeCycle(viewModel.events) {
+            when (it) {
+                is ConnectionsEvent.HealthKitConnectionRequest -> {
+                    when (it.healthKitType) {
+                        HealthKitType.HEALTH_CONNECT -> {
+                            navigator.push(HealthConnectScreenDestination())
                         }
 
-                        ConnectionsEvent.AlreadyConnected -> {
-                            context.toastLong(R.string.already_connected)
+                        HealthKitType.SAMSUNG_HEALTH -> {
+                            navigator.push(SamsungHealthScreenDestination())
                         }
 
-                        is ConnectionsEvent.ConnectionError -> {
-                            context.toastLong(it.message.asString(context))
-                        }
-
-                        ConnectionsEvent.DisconnectionNotSupported -> {
-                            context.toastLong(R.string.data_source_disconnection_not_supported)
-                        }
-
-                        is ConnectionsEvent.DisconnectionError -> {
-                            context.toastLong(it.message.asString(context))
-                        }
-
-                        ConnectionsEvent.Disconnected -> {
-                            context.toastLong(R.string.data_source_disconnected)
+                        HealthKitType.ANDROID_STEPS -> {
+                            navigator.push(AndroidStepsScreenDestination())
                         }
                     }
+                }
+
+                ConnectionsEvent.AlreadyConnected -> {
+                    context.toastLong(R.string.already_connected)
+                }
+
+                is ConnectionsEvent.ConnectionError -> {
+                    context.toastLong(it.message.asString(context))
+                }
+
+                ConnectionsEvent.DisconnectionNotSupported -> {
+                    context.toastLong(R.string.data_source_disconnection_not_supported)
+                }
+
+                is ConnectionsEvent.DisconnectionError -> {
+                    context.toastLong(it.message.asString(context))
+                }
+
+                ConnectionsEvent.Disconnected -> {
+                    context.toastLong(R.string.data_source_disconnected)
                 }
             }
         }

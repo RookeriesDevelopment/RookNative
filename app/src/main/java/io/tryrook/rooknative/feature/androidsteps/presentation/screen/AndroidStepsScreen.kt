@@ -21,7 +21,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,9 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -50,33 +47,28 @@ import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.framework.extension.toastLong
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.util.CollectEventsWithLifeCycle
 import io.tryrook.rooknative.feature.androidsteps.domain.model.AndroidStepsAction
 import io.tryrook.rooknative.feature.androidsteps.domain.model.AndroidStepsEvent
 import io.tryrook.rooknative.feature.androidsteps.domain.model.AndroidStepsState
-import kotlinx.coroutines.flow.collectLatest
 
 class AndroidStepsScreenDestination : Screen {
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val lifecycleOwner = LocalLifecycleOwner.current
         val navigator = LocalNavigator.currentOrThrow
 
         val viewModel = getViewModel<AndroidStepsViewModel>()
         val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest {
-                    when (it) {
-                        AndroidStepsEvent.AndroidStepsEnabled -> {
-                            navigator.pop()
-                        }
+        CollectEventsWithLifeCycle(viewModel.events) {
+            when (it) {
+                AndroidStepsEvent.AndroidStepsEnabled -> {
+                    navigator.pop()
+                }
 
-                        AndroidStepsEvent.MissingPermissions -> {
-                            context.toastLong(R.string.android_permissions_denied)
-                        }
-                    }
+                AndroidStepsEvent.MissingPermissions -> {
+                    context.toastLong(R.string.android_permissions_denied)
                 }
             }
         }

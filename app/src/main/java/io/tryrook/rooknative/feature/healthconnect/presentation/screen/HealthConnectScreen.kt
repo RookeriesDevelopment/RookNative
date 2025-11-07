@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,9 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -63,42 +60,37 @@ import io.tryrook.rooknative.core.presentation.component.HorizontalSpacer
 import io.tryrook.rooknative.core.presentation.component.MessageAndButton
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.util.CollectEventsWithLifeCycle
 import io.tryrook.rooknative.feature.healthconnect.domain.enums.HealthConnectStatus
 import io.tryrook.rooknative.feature.healthconnect.domain.model.HealthConnectAction
 import io.tryrook.rooknative.feature.healthconnect.domain.model.HealthConnectEvent
 import io.tryrook.rooknative.feature.healthconnect.domain.model.HealthConnectState
-import kotlinx.coroutines.flow.collectLatest
 
 class HealthConnectScreenDestination : Screen {
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val lifecycleOwner = LocalLifecycleOwner.current
         val navigator = LocalNavigator.currentOrThrow
 
         val viewModel = getViewModel<HealthConnectViewModel>()
         val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest {
-                    when (it) {
-                        HealthConnectEvent.BackgroundSyncEnabled -> {
-                            navigator.pop()
-                        }
+        CollectEventsWithLifeCycle(viewModel.events) {
+            when (it) {
+                HealthConnectEvent.BackgroundSyncEnabled -> {
+                    navigator.pop()
+                }
 
-                        HealthConnectEvent.MissingPermissions -> {
-                            context.toastLong(R.string.health_connect_all_permissions_denied)
-                        }
+                HealthConnectEvent.MissingPermissions -> {
+                    context.toastLong(R.string.health_connect_all_permissions_denied)
+                }
 
-                        HealthConnectEvent.MissingBackgroundPermissions -> {
-                            context.toastLong(R.string.health_connect_background_permissions_denied)
-                        }
+                HealthConnectEvent.MissingBackgroundPermissions -> {
+                    context.toastLong(R.string.health_connect_background_permissions_denied)
+                }
 
-                        HealthConnectEvent.MissingDataTypesPermissions -> {
-                            context.toastLong(R.string.health_connect_data_permissions_denied)
-                        }
-                    }
+                HealthConnectEvent.MissingDataTypesPermissions -> {
+                    context.toastLong(R.string.health_connect_data_permissions_denied)
                 }
             }
         }

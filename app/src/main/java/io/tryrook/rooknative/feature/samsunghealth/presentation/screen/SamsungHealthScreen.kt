@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,9 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -61,36 +58,31 @@ import io.tryrook.rooknative.core.presentation.component.HorizontalSpacer
 import io.tryrook.rooknative.core.presentation.component.MessageAndButton
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.util.CollectEventsWithLifeCycle
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthAction
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthEvent
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthState
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungStatus
 import io.tryrook.sdk.samsung.domain.enums.SamsungHealthAvailability
 import io.tryrook.sdk.samsung.domain.enums.SamsungHealthPermission
-import kotlinx.coroutines.flow.collectLatest
 
 class SamsungHealthScreenDestination : Screen {
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val lifecycleOwner = LocalLifecycleOwner.current
         val navigator = LocalNavigator.currentOrThrow
 
         val viewModel = getViewModel<SamsungHealthViewModel>()
         val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest {
-                    when (it) {
-                        SamsungHealthEvent.BackgroundSyncEnabled -> {
-                            navigator.pop()
-                        }
+        CollectEventsWithLifeCycle(viewModel.events) {
+            when (it) {
+                SamsungHealthEvent.BackgroundSyncEnabled -> {
+                    navigator.pop()
+                }
 
-                        SamsungHealthEvent.MissingPermissions -> {
-                            context.toastLong(R.string.samsung_health_permissions_denied)
-                        }
-                    }
+                SamsungHealthEvent.MissingPermissions -> {
+                    context.toastLong(R.string.samsung_health_permissions_denied)
                 }
             }
         }

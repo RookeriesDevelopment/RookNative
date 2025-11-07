@@ -23,7 +23,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,10 +38,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -54,38 +50,33 @@ import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.extension.isPortrait
 import io.tryrook.rooknative.core.presentation.modifier.edgeToEdgePadding
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
+import io.tryrook.rooknative.core.presentation.util.CollectEventsWithLifeCycle
 import io.tryrook.rooknative.feature.connections.presentation.screen.ConnectionsScreenDestination
 import io.tryrook.rooknative.feature.login.domain.model.LoginAction
 import io.tryrook.rooknative.feature.login.domain.model.LoginEvent
 import io.tryrook.rooknative.feature.login.domain.model.LoginInputState
 import io.tryrook.rooknative.feature.login.domain.model.LoginState
-import kotlinx.coroutines.flow.collectLatest
 
 class LoginScreenDestination : Screen {
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val lifecycleOwner = LocalLifecycleOwner.current
         val navigator = LocalNavigator.currentOrThrow
 
         val viewModel = getViewModel<LoginViewModel>()
         val state by viewModel.uiState.collectAsStateWithLifecycle()
         val inputState by viewModel.inputState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest {
-                    when (it) {
-                        is LoginEvent.Error -> {
-                            context.toastLong(it.message.asString(context))
-                        }
+        CollectEventsWithLifeCycle(viewModel.events) {
+            when (it) {
+                is LoginEvent.Error -> {
+                    context.toastLong(it.message.asString(context))
+                }
 
-                        LoginEvent.LoggedIn -> {
-                            navigator.replaceAll(
-                                item = ConnectionsScreenDestination(disableNextButton = false)
-                            )
-                        }
-                    }
+                LoginEvent.LoggedIn -> {
+                    navigator.replaceAll(
+                        item = ConnectionsScreenDestination(disableNextButton = false)
+                    )
                 }
             }
         }
