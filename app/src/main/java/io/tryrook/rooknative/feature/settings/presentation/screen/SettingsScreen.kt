@@ -1,16 +1,23 @@
 package io.tryrook.rooknative.feature.settings.presentation.screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -23,6 +30,7 @@ import io.tryrook.rooknative.core.presentation.util.CollectEventsWithLifeCycle
 import io.tryrook.rooknative.feature.connections.presentation.screen.ConnectionsScreenDestination
 import io.tryrook.rooknative.feature.settings.domain.model.SettingsAction
 import io.tryrook.rooknative.feature.settings.domain.model.SettingsEvent
+import io.tryrook.rooknative.feature.settings.domain.model.SettingsState
 import io.tryrook.rooknative.feature.settings.presentation.component.SettingTile
 import io.tryrook.rooknative.feature.welcome.presentation.screen.WelcomeScreenDestination
 
@@ -34,6 +42,7 @@ class SettingsScreenDestination : Screen {
         val navigatorParent = navigator.parent
 
         val viewModel = getViewModel<SettingsViewModel>()
+        val state by viewModel.uiState.collectAsStateWithLifecycle()
 
         CollectEventsWithLifeCycle(viewModel.events) {
             when (it) {
@@ -49,6 +58,7 @@ class SettingsScreenDestination : Screen {
         }
 
         SettingsScreen(
+            state = state,
             onAction = viewModel::onAction,
             navigateToConnections = {
                 navigatorParent?.push(ConnectionsScreenDestination(disableNextButton = true))
@@ -59,6 +69,7 @@ class SettingsScreenDestination : Screen {
 
 @Composable
 fun SettingsScreen(
+    state: SettingsState,
     onAction: (SettingsAction) -> Unit,
     navigateToConnections: () -> Unit,
 ) {
@@ -68,6 +79,13 @@ fun SettingsScreen(
             .edgeToEdgePadding()
             .padding(top = 16.dp, start = 16.dp, end = 16.dp),
     ) {
+        AnimatedVisibility(state.loggingOut) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+                content = { CircularProgressIndicator() },
+            )
+        }
         SettingTile(
             modifier = Modifier.padding(8.dp),
             titleRes = R.string.manage_connections,
@@ -91,6 +109,7 @@ private fun SettingsScreenPreview() {
     RookNativeTheme {
         Surface {
             SettingsScreen(
+                state = SettingsState(),
                 onAction = {},
                 navigateToConnections = {},
             )

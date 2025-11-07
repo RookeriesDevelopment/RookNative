@@ -13,11 +13,15 @@ import io.tryrook.rooknative.core.framework.health.RookStepsRepository
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.feature.settings.domain.model.SettingsAction
 import io.tryrook.rooknative.feature.settings.domain.model.SettingsEvent
+import io.tryrook.rooknative.feature.settings.domain.model.SettingsState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,9 +38,14 @@ class SettingsViewModel @Inject constructor(
     private val _events = Channel<SettingsEvent>()
     val events = _events.receiveAsFlow()
 
+    private val _uiState = MutableStateFlow(SettingsState())
+    val uiState get() = _uiState.asStateFlow()
+
     fun onAction(action: SettingsAction) {
         when (action) {
             SettingsAction.OnLogoutClick -> viewModelScope.launch(dispatcher) {
+                _uiState.update { it.copy(loggingOut = true) }
+
                 // Logout from api data sources
                 //
                 // You should call revoke only on data sources that are actually connected
