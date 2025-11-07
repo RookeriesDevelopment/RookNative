@@ -139,7 +139,7 @@ fun ConnectionsScreen(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 )
-                VerticalSpacer(of = 32.dp)
+                VerticalSpacer(of = 16.dp)
                 AnimatedVisibility(
                     visible = state.loadingHealthKitConnections || state.loadingApiConnections,
                 ) {
@@ -173,12 +173,17 @@ fun ConnectionsScreen(
                         },
                     )
                 }
+                if (!disableNextButton) {
+                    VerticalSpacer(of = 16.dp)
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterEnd,
+                    ) {
+                        NextButton(onClick = navigateToHome)
+                    }
+                    VerticalSpacer(of = 8.dp)
+                }
             }
-        }
-        if (!disableNextButton) {
-            VerticalSpacer(of = 16.dp)
-            NextButton(onClick = navigateToHome)
-            VerticalSpacer(of = 8.dp)
         }
     }
 }
@@ -191,7 +196,7 @@ private fun ConnectionsPreview() {
             ConnectionsScreen(
                 state = ConnectionsState(),
                 onAction = {},
-                disableNextButton = true,
+                disableNextButton = false,
                 navigateToHome = {}
             )
         }
