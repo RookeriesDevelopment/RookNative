@@ -13,8 +13,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.tryrook.rooknative.BuildConfig
-import io.tryrook.rooknative.core.domain.repository.HealthRepository
-import io.tryrook.rooknative.core.framework.health.RookHealthRepository
 import io.tryrook.sdk.samsung.RookSamsung
 import javax.inject.Singleton
 
@@ -69,21 +67,5 @@ object HealthModule {
                 enableLocalLogs()
             }
         }
-    }
-
-    @Provides
-    @Singleton
-    fun provideHealthRepository(
-        backgroundSyncManager: RookBackgroundSyncManager,
-        stepsManager: RookStepsManager,
-        rookDataSources: RookDataSources,
-        rookSamsung: RookSamsung,
-    ): HealthRepository {
-        return RookHealthRepository(
-            backgroundSyncManager,
-            stepsManager,
-            rookDataSources,
-            rookSamsung,
-        )
     }
 }
