@@ -86,8 +86,9 @@ class ConnectionsViewModel @Inject constructor(
                             { dataSourceAuthorizer ->
                                 val connectionUrl = dataSourceAuthorizer.authorizationUrl
 
+                                _uiState.update { it.copy(loadingApiConnections = false) }
+
                                 if (connectionUrl != null) {
-                                    _uiState.update { it.copy(loadingApiConnections = false) }
                                     launcher.openUrlOnChrome(connectionUrl)
                                 } else {
                                     loadApiConnections()
