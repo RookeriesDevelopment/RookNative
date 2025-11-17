@@ -12,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -161,6 +162,23 @@ fun ConnectionsScreen(
                         },
                     )
                 }
+                if (state.healthKitConnectionsError) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        content = {
+                            Text(
+                                text = stringResource(R.string.error_loading_health_kit_connections),
+                            )
+                            TextButton(
+                                onClick = { onAction(ConnectionsAction.OnConnectionsRefresh) },
+                                content = { Text(stringResource(R.string.retry)) },
+                            )
+                        },
+                    )
+                }
                 for (connection in state.apiConnections) {
                     ApiConnectionTile(
                         connection = connection,
@@ -170,6 +188,21 @@ fun ConnectionsScreen(
                         },
                         onDisconnect = {
                             onAction(ConnectionsAction.OnDisconnectClick(it))
+                        },
+                    )
+                }
+                if (state.apiConnectionsError) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        content = {
+                            Text(text = stringResource(R.string.error_loading_api_connections))
+                            TextButton(
+                                onClick = { onAction(ConnectionsAction.OnConnectionsRefresh) },
+                                content = { Text(stringResource(R.string.retry)) },
+                            )
                         },
                     )
                 }
@@ -194,7 +227,10 @@ private fun ConnectionsPreview() {
     RookNativeTheme {
         Surface {
             ConnectionsScreen(
-                state = ConnectionsState(),
+                state = ConnectionsState(
+                    apiConnectionsError = true,
+                    healthKitConnectionsError = true,
+                ),
                 onAction = {},
                 disableNextButton = false,
                 navigateToHome = {}

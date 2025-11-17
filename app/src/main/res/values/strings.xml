@@ -80,4 +80,6 @@
     <string name="android_no_summary">Connect with Android to see your summary</string>
     <string name="good_bye">Good bye!</string>
     <string name="logout_error">Error logging out, try again</string>
+    <string name="error_loading_api_connections">Error loading api connections</string>
+    <string name="error_loading_health_kit_connections">Error loading health kit connections</string>
 </resources>
