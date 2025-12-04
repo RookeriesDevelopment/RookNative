@@ -130,4 +130,7 @@ dependencies {
     testImplementation(libs.io.mockk)
     testImplementation(libs.app.cash.turbine)
     testImplementation(libs.org.amshove.kluent.android)
+
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
 }
