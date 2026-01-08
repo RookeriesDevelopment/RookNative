@@ -53,7 +53,7 @@
     <string name="hc_background_access_justification">ROOK runs in the background to always keep your data up to date, Health Connect restricts background access unless the user gives it\'s permission.</string>
     <string name="hc_background_access_instructions">After you give access to all the data types of your choice a second screen will be displayed, click on \'Allow\' to grant background access.</string>
     <string name="hc_background_access_instructions_2">If you previously denied permissions, you can give access in Health Connect Settings by going to App Permissions → ROOK → Additional Access → Turn on \'Access data in the background\'.</string>
-    <string name="hc_background_not_supported">Your version of Health Connect can\'t share data with our app in the background right now. Try updating the Health Connect app or your phone (system updates); if that doesn\'t help, background sharing may not be available on your device."</string>
+    <string name="hc_background_not_supported">Your version of Health Connect can\'t share data with our app in the background right now. Try updating the Health Connect app or your phone (system updates); if that doesn\'t help, background sharing may not be available on your device.</string>
     <string name="hc_not_supported">Health Connect is not supported by your device.</string>
     <string name="allow_access">Allow access</string>
     <string name="download">Download</string>
