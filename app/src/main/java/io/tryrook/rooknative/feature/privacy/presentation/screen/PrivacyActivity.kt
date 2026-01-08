@@ -18,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
@@ -49,12 +51,14 @@ class PrivacyActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .padding(paddingValues)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(16.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "Your privacy policy goes here",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "Your app should display an appropriate privacy policy for how you will handle and use Health Connect data.",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }
