@@ -150,13 +150,13 @@ private fun AndroidStepsScreen(state: AndroidStepsState, onAction: (AndroidSteps
                 fontWeight = FontWeight.W700,
             ),
         )
-        VerticalSpacer(of = 24.dp)
+        VerticalSpacer(of = 8.dp)
         Text(
             text = stringResource(R.string.as_onboarding_description),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
         )
-        VerticalSpacer(of = 12.dp)
+        VerticalSpacer(of = 16.dp)
         Text(
             modifier = Modifier.padding(bottom = 4.dp),
             text = stringResource(R.string.notifications),
