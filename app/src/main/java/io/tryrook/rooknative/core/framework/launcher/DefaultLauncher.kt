@@ -67,6 +67,17 @@ class DefaultLauncher(private val context: Context) : Launcher {
         context.startActivity(intent)
     }
 
+    override fun openSettings() {
+        val intent = Intent(Settings.ACTION_SETTINGS).apply {
+
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        }
+
+        context.startActivity(intent)
+    }
+
     override fun openApplicationSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
             data = "package:${context.packageName}".toUri()

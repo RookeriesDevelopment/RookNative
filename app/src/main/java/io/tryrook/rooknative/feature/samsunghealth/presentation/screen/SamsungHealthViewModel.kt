@@ -9,12 +9,11 @@ import io.tryrook.rooknative.core.domain.launcher.Launcher
 import io.tryrook.rooknative.core.domain.preferences.AppPreferences
 import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
 import io.tryrook.rooknative.di.IO
+import io.tryrook.rooknative.feature.samsunghealth.domain.enums.SamsungHealthStatus
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthAction
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthEvent
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthState
-import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungStatus
 import io.tryrook.sdk.samsung.domain.enums.SHRequestPermissionsStatus
-import io.tryrook.sdk.samsung.domain.enums.SamsungHealthAvailability
 import io.tryrook.sdk.samsung.domain.enums.SamsungHealthPermission
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -44,7 +43,7 @@ class SamsungHealthViewModel @Inject constructor(
 
             SamsungHealthAction.OnDownloadClick -> launcher.openSamsungHealthOnPlayStore()
 
-            SamsungHealthAction.OnOpenSettingsClick -> launcher.openApplicationSettings()
+            SamsungHealthAction.OnOpenSettingsClick -> launcher.openSettings()
 
             SamsungHealthAction.OnOpenSamsungHealthClick -> launcher.openSamsungHealthSettings()
 
@@ -98,14 +97,18 @@ class SamsungHealthViewModel @Inject constructor(
 
     private fun initSamsungHealth() {
         viewModelScope.launch(dispatcher) {
-            _uiState.update { it.copy(samsungStatus = SamsungStatus.Loading) }
+            _uiState.update { it.copy(samsungHealthStatus = SamsungHealthStatus.LOADING) }
 
             samsungHealthRepository.checkSamsungHealthAvailability().fold(
                 {
-                    _uiState.update { it.copy(samsungStatus = SamsungStatus.Error) }
+                    _uiState.update { it.copy(samsungHealthStatus = SamsungHealthStatus.ERROR) }
                 },
                 { samsungHealthAvailability ->
-                    if (samsungHealthAvailability == SamsungHealthAvailability.INSTALLED) {
+                    val samsungHealthStatus = SamsungHealthStatus.fromAvailability(
+                        availability = samsungHealthAvailability,
+                    )
+
+                    if (samsungHealthStatus == SamsungHealthStatus.READY) {
                         val allPermissions = samsungHealthRepository
                             .checkSamsungHealthPermissions(samsungPermissions)
                             .getOrElse { false }
@@ -115,15 +118,13 @@ class SamsungHealthViewModel @Inject constructor(
 
                         _uiState.update {
                             it.copy(
-                                samsungStatus = SamsungStatus.Loaded(samsungHealthAvailability),
+                                samsungHealthStatus = samsungHealthStatus,
                                 permissionsGranted = allPermissions || partialPermissions,
                                 showAllowAccessButton = !allPermissions,
                             )
                         }
                     } else {
-                        _uiState.update {
-                            it.copy(samsungStatus = SamsungStatus.Loaded(samsungHealthAvailability))
-                        }
+                        _uiState.update { it.copy(samsungHealthStatus = samsungHealthStatus) }
                     }
                 },
             )

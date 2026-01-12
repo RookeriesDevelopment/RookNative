@@ -59,11 +59,10 @@ import io.tryrook.rooknative.core.presentation.component.MessageAndButton
 import io.tryrook.rooknative.core.presentation.component.VerticalSpacer
 import io.tryrook.rooknative.core.presentation.theme.RookNativeTheme
 import io.tryrook.rooknative.core.presentation.util.CollectEventsWithLifeCycle
+import io.tryrook.rooknative.feature.samsunghealth.domain.enums.SamsungHealthStatus
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthAction
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthEvent
 import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungHealthState
-import io.tryrook.rooknative.feature.samsunghealth.domain.model.SamsungStatus
-import io.tryrook.sdk.samsung.domain.enums.SamsungHealthAvailability
 import io.tryrook.sdk.samsung.domain.enums.SamsungHealthPermission
 
 class SamsungHealthScreenDestination : Screen {
@@ -218,15 +217,15 @@ private fun SamsungHealthScreen(
             }
         }
         VerticalSpacer(of = 20.dp)
-        when (state.samsungStatus) {
-            SamsungStatus.Loading -> {
+        when (state.samsungHealthStatus) {
+            SamsungHealthStatus.LOADING -> {
                 CircularProgressIndicator(
                     modifier = Modifier.size(48.dp),
                     strokeWidth = 4.dp,
                 )
             }
 
-            SamsungStatus.Error -> {
+            SamsungHealthStatus.ERROR -> {
                 MessageAndButton(
                     messageRes = R.string.availability_samsung_error,
                     buttonRes = R.string.retry,
@@ -234,57 +233,53 @@ private fun SamsungHealthScreen(
                 )
             }
 
-            is SamsungStatus.Loaded -> {
-                when (state.samsungStatus.availability) {
-                    SamsungHealthAvailability.INSTALLED -> {
-                        AnimatedVisibility(visible = state.showAllowAccessButton) {
-                            Button(
-                                shape = MaterialTheme.shapes.medium,
-                                onClick = { onAction(SamsungHealthAction.OnAllowAccessClick) },
-                                content = { Text(text = stringResource(R.string.allow_access)) },
-                            )
-                        }
-                        AnimatedVisibility(visible = state.permissionsGranted) {
-                            Button(
-                                modifier = Modifier.padding(top = 12.dp),
-                                shape = MaterialTheme.shapes.medium,
-                                onClick = { onAction(SamsungHealthAction.OnConnectClick) },
-                                content = { Text(text = stringResource(R.string.connect)) },
-                            )
-                        }
-                    }
+            SamsungHealthStatus.NOT_INSTALLED -> {
+                MessageAndButton(
+                    messageRes = R.string.sh_needs_install,
+                    buttonRes = R.string.download,
+                    onClick = { onAction(SamsungHealthAction.OnDownloadClick) },
+                )
+            }
 
-                    SamsungHealthAvailability.NOT_INSTALLED -> {
-                        MessageAndButton(
-                            messageRes = R.string.sh_needs_install,
-                            buttonRes = R.string.download,
-                            onClick = { onAction(SamsungHealthAction.OnDownloadClick) },
-                        )
-                    }
+            SamsungHealthStatus.OUTDATED -> {
+                MessageAndButton(
+                    messageRes = R.string.sh_needs_update,
+                    buttonRes = R.string.update,
+                    onClick = { onAction(SamsungHealthAction.OnDownloadClick) },
+                )
+            }
 
-                    SamsungHealthAvailability.OUTDATED -> {
-                        MessageAndButton(
-                            messageRes = R.string.sh_needs_update,
-                            buttonRes = R.string.update,
-                            onClick = { onAction(SamsungHealthAction.OnDownloadClick) },
-                        )
-                    }
+            SamsungHealthStatus.DISABLED -> {
+                MessageAndButton(
+                    messageRes = R.string.sh_disabled,
+                    buttonRes = R.string.open_settings,
+                    onClick = { onAction(SamsungHealthAction.OnOpenSettingsClick) },
+                )
+            }
 
-                    SamsungHealthAvailability.DISABLED -> {
-                        MessageAndButton(
-                            messageRes = R.string.sh_disabled,
-                            buttonRes = R.string.open_settings,
-                            onClick = { onAction(SamsungHealthAction.OnOpenSettingsClick) },
-                        )
-                    }
+            SamsungHealthStatus.NOT_READY -> {
+                MessageAndButton(
+                    messageRes = R.string.sh_not_ready,
+                    buttonRes = R.string.open_samsung_health,
+                    onClick = { onAction(SamsungHealthAction.OnOpenSamsungHealthClick) },
+                )
+            }
 
-                    SamsungHealthAvailability.NOT_READY -> {
-                        MessageAndButton(
-                            messageRes = R.string.sh_not_ready,
-                            buttonRes = R.string.open_samsung_health,
-                            onClick = { onAction(SamsungHealthAction.OnOpenSamsungHealthClick) },
-                        )
-                    }
+            SamsungHealthStatus.READY -> {
+                AnimatedVisibility(visible = state.showAllowAccessButton) {
+                    Button(
+                        shape = MaterialTheme.shapes.medium,
+                        onClick = { onAction(SamsungHealthAction.OnAllowAccessClick) },
+                        content = { Text(text = stringResource(R.string.allow_access)) },
+                    )
+                }
+                AnimatedVisibility(visible = state.permissionsGranted) {
+                    Button(
+                        modifier = Modifier.padding(top = 12.dp),
+                        shape = MaterialTheme.shapes.medium,
+                        onClick = { onAction(SamsungHealthAction.OnConnectClick) },
+                        content = { Text(text = stringResource(R.string.connect)) },
+                    )
                 }
             }
         }
@@ -298,7 +293,7 @@ private fun SamsungHealthPreview() {
         Surface {
             SamsungHealthScreen(
                 state = SamsungHealthState(
-                    samsungStatus = SamsungStatus.Loaded(SamsungHealthAvailability.INSTALLED)
+                    samsungHealthStatus = SamsungHealthStatus.READY,
                 ),
                 onAction = {},
             )

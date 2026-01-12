@@ -5,6 +5,7 @@ interface Launcher {
     fun openHealthConnectOnPlayStore()
     fun openSamsungHealthOnPlayStore()
     fun openSamsungHealthSettings()
+    fun openSettings()
     fun openApplicationSettings()
     fun requestIgnoringBatteryOptimizations()
     fun isIgnoringBatteryOptimizations(): Boolean
