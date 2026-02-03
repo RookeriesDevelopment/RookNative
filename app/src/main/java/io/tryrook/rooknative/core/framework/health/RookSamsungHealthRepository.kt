@@ -30,6 +30,8 @@ class RookSamsungHealthRepository @Inject constructor(
 ) {
     @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.Q)
     fun isCompatible(): Boolean {
+        // On version 1.1.0 or lower samsung health is compatible with SDK 26 (Android 8 - Build.VERSION_CODES.O)
+        // Future versions will only support SDK 29+ (Android 10 - Build.VERSION_CODES.Q). https://developer.samsung.com/health/data/overview.html#Restrictions
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
 
