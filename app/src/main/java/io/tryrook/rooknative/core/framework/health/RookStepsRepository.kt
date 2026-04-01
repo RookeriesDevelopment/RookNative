@@ -7,7 +7,7 @@ import com.rookmotion.rook.sdk.RookStepsManager
 import com.rookmotion.rook.sdk.domain.enums.RequestPermissionsStatus
 import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.extension.toEither
-import io.tryrook.rooknative.core.framework.error.toHealthError
+import io.tryrook.rooknative.core.presentation.error.toHealthError
 import javax.inject.Inject
 import javax.inject.Singleton
 

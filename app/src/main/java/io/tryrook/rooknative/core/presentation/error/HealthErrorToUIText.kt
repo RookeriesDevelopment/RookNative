@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.core.presentation.extension
+package io.tryrook.rooknative.core.presentation.error
 
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.domain.error.HealthError

@@ -5,7 +5,7 @@ import androidx.annotation.ChecksSdkIntAtLeast
 import arrow.core.Either
 import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.extension.toEither
-import io.tryrook.rooknative.core.framework.error.toHealthError
+import io.tryrook.rooknative.core.presentation.error.toHealthError
 import io.tryrook.sdk.samsung.RookSamsung
 import io.tryrook.sdk.samsung.domain.annotation.ExperimentalRookSamsungApi
 import io.tryrook.sdk.samsung.domain.enums.SHRequestPermissionsStatus

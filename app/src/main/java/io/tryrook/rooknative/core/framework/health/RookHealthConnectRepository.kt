@@ -19,7 +19,7 @@ import com.rookmotion.rook.sdk.domain.model.SyncStatusWithData
 import com.rookmotion.rook.sdk.domain.model.SyncType
 import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.extension.toEither
-import io.tryrook.rooknative.core.framework.error.toHealthError
+import io.tryrook.rooknative.core.presentation.error.toHealthError
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import javax.inject.Inject

@@ -8,7 +8,7 @@ import com.rookmotion.rook.sdk.domain.model.AuthorizedDataSources
 import com.rookmotion.rook.sdk.domain.model.DataSourceAuthorizer
 import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.extension.toEither
-import io.tryrook.rooknative.core.framework.error.toHealthError
+import io.tryrook.rooknative.core.presentation.error.toHealthError
 import javax.inject.Inject
 import javax.inject.Singleton
 
