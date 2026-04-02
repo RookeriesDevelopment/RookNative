@@ -82,4 +82,8 @@
     <string name="logout_error">Error logging out, try again</string>
     <string name="error_loading_api_connections">Error loading api connections</string>
     <string name="error_loading_health_kit_connections">Error loading health kit connections</string>
+    <string name="input_error">Input cannot be empty</string>
+    <string name="data_submitted">Data submitted successfully!</string>
+    <string name="example">Example</string>
+    <string name="input_hint">Type your input</string>
 </resources>

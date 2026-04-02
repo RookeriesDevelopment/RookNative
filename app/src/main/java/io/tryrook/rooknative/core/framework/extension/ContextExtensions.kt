@@ -11,3 +11,11 @@ fun Context.toastLong(message: String) {
 fun Context.toastLong(@StringRes messageId: Int) {
     Toast.makeText(this, messageId, Toast.LENGTH_LONG).show()
 }
+
+fun Context.toastShort(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
+
+fun Context.toastShort(@StringRes messageId: Int) {
+    Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
+}
