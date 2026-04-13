@@ -11,10 +11,10 @@ import io.tryrook.rooknative.BuildConfig
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.repository.AuthRepository
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
-import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
 import io.tryrook.rooknative.core.presentation.error.toUiText
 import io.tryrook.rooknative.core.presentation.text.UIText
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.feature.login.domain.model.LoginAction
 import io.tryrook.rooknative.feature.login.domain.model.LoginEvent

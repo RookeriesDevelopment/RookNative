@@ -4,9 +4,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
-import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
-import io.tryrook.rooknative.core.framework.health.RookStepsRepository
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
+import io.tryrook.rooknative.core.rook.RookStepsRepository
 import io.tryrook.rooknative.feature.summaries.domain.usecase.GetAndroidSummaryUseCase
 import io.tryrook.rooknative.feature.summaries.domain.usecase.GetHealthConnectSummaryUseCase
 import io.tryrook.rooknative.feature.summaries.domain.usecase.GetSamsungHealthSummaryUseCase

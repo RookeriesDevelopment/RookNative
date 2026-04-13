@@ -28,7 +28,7 @@ import com.rookmotion.rook.sdk.domain.model.SyncType
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.tryrook.rooknative.BuildConfig
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.Period

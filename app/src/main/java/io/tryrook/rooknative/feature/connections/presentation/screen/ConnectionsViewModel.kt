@@ -7,11 +7,11 @@ import com.rookmotion.rook.sdk.domain.enums.HealthConnectAvailability
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.tryrook.rooknative.core.domain.launcher.Launcher
 import io.tryrook.rooknative.core.domain.preferences.AppPreferences
-import io.tryrook.rooknative.core.framework.health.RookApiHealthRepository
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
-import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
-import io.tryrook.rooknative.core.framework.health.RookStepsRepository
 import io.tryrook.rooknative.core.presentation.error.toUiText
+import io.tryrook.rooknative.core.rook.RookApiHealthRepository
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
+import io.tryrook.rooknative.core.rook.RookStepsRepository
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.feature.connections.domain.model.Connection
 import io.tryrook.rooknative.feature.connections.domain.model.ConnectionsAction

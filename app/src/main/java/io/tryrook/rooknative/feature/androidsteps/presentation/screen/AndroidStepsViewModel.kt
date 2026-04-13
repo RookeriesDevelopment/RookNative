@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.domain.enums.RequestPermissionsStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.tryrook.rooknative.core.domain.launcher.Launcher
-import io.tryrook.rooknative.core.framework.health.RookStepsRepository
+import io.tryrook.rooknative.core.rook.RookStepsRepository
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.feature.androidsteps.domain.model.AndroidStepsAction
 import io.tryrook.rooknative.feature.androidsteps.domain.model.AndroidStepsEvent

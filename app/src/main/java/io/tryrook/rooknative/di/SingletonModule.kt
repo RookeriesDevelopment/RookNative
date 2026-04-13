@@ -8,9 +8,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.tryrook.rooknative.core.data.preferences.DefaultAppPreferences
 import io.tryrook.rooknative.core.data.repository.DefaultAuthRepository
+import io.tryrook.rooknative.core.data.repository.DefaultExampleRepository
 import io.tryrook.rooknative.core.domain.launcher.Launcher
 import io.tryrook.rooknative.core.domain.preferences.AppPreferences
 import io.tryrook.rooknative.core.domain.repository.AuthRepository
+import io.tryrook.rooknative.core.domain.repository.ExampleRepository
 import io.tryrook.rooknative.core.framework.launcher.DefaultLauncher
 import javax.inject.Singleton
 
@@ -33,5 +35,11 @@ object SingletonModule {
     @Singleton
     fun provideAppPreferences(@ApplicationContext context: Context): AppPreferences {
         return DefaultAppPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExampleRepository(): ExampleRepository {
+        return DefaultExampleRepository()
     }
 }

@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.core.framework.health
+package io.tryrook.rooknative.core.rook
 
 import android.app.Activity
 import arrow.core.Either

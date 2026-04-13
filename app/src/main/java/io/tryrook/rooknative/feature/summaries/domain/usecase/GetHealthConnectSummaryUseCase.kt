@@ -5,7 +5,7 @@ import com.rookmotion.rook.sdk.domain.model.DailyCalories
 import com.rookmotion.rook.sdk.domain.model.HCSleepSummary
 import com.rookmotion.rook.sdk.domain.model.SyncStatusWithData
 import io.tryrook.rooknative.core.domain.extension.to2Decimals
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
 import io.tryrook.rooknative.feature.summaries.domain.model.Summary
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

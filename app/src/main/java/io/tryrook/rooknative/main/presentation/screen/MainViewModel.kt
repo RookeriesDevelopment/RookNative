@@ -7,8 +7,8 @@ import com.rookmotion.rook.sdk.domain.model.RookConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.tryrook.rooknative.BuildConfig
 import io.tryrook.rooknative.core.domain.repository.AuthRepository
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
-import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.main.domain.enums.UserSessionStatus
 import io.tryrook.rooknative.main.domain.model.MainState
