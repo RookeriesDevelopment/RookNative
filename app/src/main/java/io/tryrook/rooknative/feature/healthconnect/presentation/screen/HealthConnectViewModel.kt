@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.tryrook.rooknative.BuildConfig
 import io.tryrook.rooknative.core.domain.launcher.Launcher
 import io.tryrook.rooknative.core.domain.preferences.AppPreferences
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.feature.healthconnect.domain.enums.HealthConnectStatus
 import io.tryrook.rooknative.feature.healthconnect.domain.model.HealthConnectAction

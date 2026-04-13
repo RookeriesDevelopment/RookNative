@@ -1,7 +1,7 @@
 package io.tryrook.rooknative.feature.summaries.domain.usecase
 
 import arrow.core.getOrElse
-import io.tryrook.rooknative.core.framework.health.RookStepsRepository
+import io.tryrook.rooknative.core.rook.RookStepsRepository
 import io.tryrook.rooknative.feature.summaries.domain.model.Summary
 import kotlinx.coroutines.coroutineScope
 

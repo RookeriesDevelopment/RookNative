@@ -2,7 +2,7 @@ package io.tryrook.rooknative.feature.summaries.domain.usecase
 
 import arrow.core.getOrElse
 import io.tryrook.rooknative.core.domain.extension.to2Decimals
-import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
+import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
 import io.tryrook.rooknative.feature.summaries.domain.model.Summary
 import io.tryrook.sdk.samsung.domain.model.SHCalories
 import io.tryrook.sdk.samsung.domain.model.SHSleepSummary

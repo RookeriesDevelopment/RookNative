@@ -1,4 +1,4 @@
-package io.tryrook.rooknative.core.framework.extension
+package io.tryrook.rooknative.core.rook
 
 import com.rookmotion.rook.sdk.domain.model.AuthorizedDataSources
 

@@ -3,8 +3,8 @@ package io.tryrook.rooknative
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 import io.tryrook.rooknative.core.domain.preferences.AppPreferences
-import io.tryrook.rooknative.core.framework.health.RookHealthConnectRepository
-import io.tryrook.rooknative.core.framework.health.RookSamsungHealthRepository
+import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
+import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
 import timber.log.Timber
 import javax.inject.Inject
 
