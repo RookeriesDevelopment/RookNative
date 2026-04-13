@@ -44,8 +44,11 @@ class GetSamsungHealthSummaryUseCase(
 
             when (syncStatus) {
                 is SHSyncStatusWithData.Synced<SHCalories> -> {
+                    val active = syncStatus.data.active ?: 0.0
+                    val basal = syncStatus.data.basal ?: 0.0
+
                     // Get total calories by adding active and basal calories
-                    (syncStatus.data.active + syncStatus.data.basal).roundToInt()
+                    (active + basal).roundToInt()
                 }
 
                 SHSyncStatusWithData.RecordsNotFound -> 0

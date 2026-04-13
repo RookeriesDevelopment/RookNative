@@ -3,7 +3,6 @@ package io.tryrook.rooknative.di
 import android.content.Context
 import com.rookmotion.rook.sdk.RookBackgroundSyncManager
 import com.rookmotion.rook.sdk.RookConfigurationManager
-import com.rookmotion.rook.sdk.RookDataSources
 import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rook.sdk.RookStepsManager
 import com.rookmotion.rook.sdk.RookSyncManager
@@ -12,6 +11,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.tryrook.api.sources.RookApiSources
 import io.tryrook.rooknative.BuildConfig
 import io.tryrook.sdk.samsung.RookSamsung
 import javax.inject.Singleton
@@ -55,8 +55,8 @@ object HealthModule {
 
     @Provides
     @Singleton
-    fun provideRookDataSources(@ApplicationContext context: Context): RookDataSources {
-        return RookDataSources(context)
+    fun provideRookApiSources(@ApplicationContext context: Context): RookApiSources {
+        return RookApiSources(context)
     }
 
     @Provides

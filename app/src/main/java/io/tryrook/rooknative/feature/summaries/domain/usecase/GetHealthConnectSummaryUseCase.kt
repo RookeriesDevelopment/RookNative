@@ -1,7 +1,7 @@
 package io.tryrook.rooknative.feature.summaries.domain.usecase
 
 import arrow.core.getOrElse
-import com.rookmotion.rook.sdk.domain.model.DailyCalories
+import com.rookmotion.rook.sdk.domain.model.HCCalories
 import com.rookmotion.rook.sdk.domain.model.HCSleepSummary
 import com.rookmotion.rook.sdk.domain.model.SyncStatusWithData
 import io.tryrook.rooknative.core.domain.extension.to2Decimals
@@ -43,9 +43,12 @@ class GetHealthConnectSummaryUseCase(
             }
 
             when (syncStatus) {
-                is SyncStatusWithData.Synced<DailyCalories> -> {
+                is SyncStatusWithData.Synced<HCCalories> -> {
+                    val active = syncStatus.data.active ?: 0.0
+                    val basal = syncStatus.data.basal ?: 0.0
+
                     // Get total calories by adding active and basal calories
-                    (syncStatus.data.active + syncStatus.data.basal).roundToInt()
+                    (active + basal).roundToInt()
                 }
 
                 SyncStatusWithData.RecordsNotFound -> 0

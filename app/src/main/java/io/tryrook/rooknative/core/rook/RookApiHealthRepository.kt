@@ -1,41 +1,51 @@
 package io.tryrook.rooknative.core.rook
 
 import arrow.core.Either
-import com.rookmotion.rook.sdk.RookDataSources
-import com.rookmotion.rook.sdk.domain.enums.DataSourceType
-import com.rookmotion.rook.sdk.domain.model.AuthorizedDataSourceV2
-import com.rookmotion.rook.sdk.domain.model.AuthorizedDataSources
-import com.rookmotion.rook.sdk.domain.model.DataSourceAuthorizer
-import io.tryrook.rooknative.core.domain.error.HealthError
+import arrow.core.left
+import io.tryrook.api.sources.RookApiSources
+import io.tryrook.api.sources.domain.enums.DataSourceType
+import io.tryrook.api.sources.domain.model.ApiConfiguration
+import io.tryrook.api.sources.domain.model.AuthorizedDataSourceV2
+import io.tryrook.api.sources.domain.model.DataSourceAuthorizer
 import io.tryrook.rooknative.core.domain.extension.toEither
-import io.tryrook.rooknative.core.presentation.error.toHealthError
+import io.tryrook.rooknative.core.domain.repository.AuthRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RookApiHealthRepository @Inject constructor(
-    private val rookDataSources: RookDataSources,
+    private val rookApiSources: RookApiSources,
+    private val authRepository: AuthRepository,
 ) {
+    fun enableLocalLogs() {
+        rookApiSources.enableLocalLogs()
+    }
+
+    fun initRook(configuration: ApiConfiguration) {
+        rookApiSources.initRook(configuration)
+    }
+
     suspend fun getDataSourceAuthorizer(
         dataSource: String,
         redirectUrl: String? = null
     ): Either<HealthError, DataSourceAuthorizer> {
-        return rookDataSources.getDataSourceAuthorizer(dataSource, redirectUrl)
-            .toEither { it.toHealthError() }
-    }
+        val userID = authRepository.getUserID() ?: return HealthError.Other("User not found").left()
 
-    suspend fun getAuthorizedDataSources(): Either<HealthError, AuthorizedDataSources> {
-        return rookDataSources.getAuthorizedDataSources()
+        return rookApiSources.getDataSourceAuthorizer(userID, dataSource, redirectUrl)
             .toEither { it.toHealthError() }
     }
 
     suspend fun getAuthorizedDataSourcesV2(): Either<HealthError, List<AuthorizedDataSourceV2>> {
-        return rookDataSources.getAuthorizedDataSourcesV2()
+        val userID = authRepository.getUserID() ?: return HealthError.Other("User not found").left()
+
+        return rookApiSources.getAuthorizedDataSourcesV2(userID)
             .toEither { it.toHealthError() }
     }
 
     suspend fun revokeDataSource(dataSourceType: DataSourceType): Either<HealthError, Unit> {
-        return rookDataSources.revokeDataSource(dataSourceType)
+        val userID = authRepository.getUserID() ?: return HealthError.Other("User not found").left()
+
+        return rookApiSources.revokeDataSource(userID, dataSourceType)
             .toEither { it.toHealthError() }
     }
 }

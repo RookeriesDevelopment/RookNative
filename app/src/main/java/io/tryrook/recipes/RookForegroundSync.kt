@@ -82,8 +82,9 @@ class RookForegroundSync @AssistedInject constructor(
 
         val configuration = RookConfiguration(
             clientUUID = BuildConfig.CLIENT_UUID,
-            secretKey = BuildConfig.SECRET_KEY,
+            secret = BuildConfig.SECRET,
             environment = RookEnvironment.SANDBOX,
+            packageName = BuildConfig.PACKAGE_NAME,
         )
 
         val initialized = healthConnectRepository.initRook(configuration).isRight()

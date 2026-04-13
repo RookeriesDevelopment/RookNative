@@ -2,7 +2,7 @@ package io.tryrook.rooknative.feature.connections.domain.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.rookmotion.rook.sdk.domain.enums.DataSourceType
+import io.tryrook.api.sources.domain.enums.DataSourceType
 import io.tryrook.rooknative.R
 
 sealed interface Connection {

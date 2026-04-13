@@ -2,8 +2,8 @@ package io.tryrook.rooknative.feature.settings.presentation.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rookmotion.rook.sdk.domain.enums.DataSourceType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.tryrook.api.sources.domain.enums.DataSourceType
 import io.tryrook.rooknative.core.domain.preferences.AppPreferences
 import io.tryrook.rooknative.core.domain.repository.AuthRepository
 import io.tryrook.rooknative.core.rook.RookApiHealthRepository

@@ -3,9 +3,7 @@ package io.tryrook.rooknative.core.rook
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import arrow.core.Either
-import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.extension.toEither
-import io.tryrook.rooknative.core.presentation.error.toHealthError
 import io.tryrook.sdk.samsung.RookSamsung
 import io.tryrook.sdk.samsung.domain.annotation.ExperimentalRookSamsungApi
 import io.tryrook.sdk.samsung.domain.enums.SHRequestPermissionsStatus
@@ -20,6 +18,7 @@ import io.tryrook.sdk.samsung.domain.model.SHSleepSummary
 import io.tryrook.sdk.samsung.domain.model.SHSyncStatusWithData
 import io.tryrook.sdk.samsung.domain.model.SHSyncType
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,7 +30,7 @@ class RookSamsungHealthRepository @Inject constructor(
     @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.Q)
     fun isCompatible(): Boolean {
         // On version 1.1.0 or lower samsung health is compatible with SDK 26 (Android 8 - Build.VERSION_CODES.O)
-        // Future versions will only support SDK 29+ (Android 10 - Build.VERSION_CODES.Q). https://developer.samsung.com/health/data/overview.html#Restrictions
+        // 4.0.0+ versions will only support SDK 29+ (Android 10 - Build.VERSION_CODES.Q). https://developer.samsung.com/health/data/overview.html#Restrictions
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
 
@@ -55,11 +54,6 @@ class RookSamsungHealthRepository @Inject constructor(
 
     suspend fun syncUserTimeZone(): Either<HealthError, Unit> {
         return rookSamsung.syncUserTimeZone()
-            .toEither { it.toHealthError() }
-    }
-
-    suspend fun clearUserID(): Either<HealthError, Unit> {
-        return rookSamsung.clearUserID()
             .toEither { it.toHealthError() }
     }
 
@@ -101,9 +95,20 @@ class RookSamsungHealthRepository @Inject constructor(
     }
 
     suspend fun sync(date: LocalDate): Either<HealthError, Unit> {
-        return rookSamsung.sync(date)
-            .map { }
-            .toEither { it.toHealthError() }
+        return Either.catch {
+            val result = rookSamsung.sync(date)
+
+            // Use getOrThrow if you want to throw an exception if a least one is not successful
+            val sleepSummaryStatus = result.sleepSummary.getOrNull()
+            val physicalSummaryStatus = result.physicalSummary.getOrNull()
+            val bodySummaryStatus = result.bodySummary.getOrNull()
+
+            Timber.i("Sleep Summary Status: $sleepSummaryStatus")
+            Timber.i("Physical Summary Status: $physicalSummaryStatus")
+            Timber.i("Body Summary Status: $bodySummaryStatus")
+        }.mapLeft {
+            it.toHealthError()
+        }
     }
 
     suspend fun sync(date: LocalDate, summary: SHSyncType.Summary): Either<HealthError, Unit> {

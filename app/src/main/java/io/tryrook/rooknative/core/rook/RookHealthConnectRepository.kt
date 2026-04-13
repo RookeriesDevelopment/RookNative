@@ -9,18 +9,17 @@ import com.rookmotion.rook.sdk.domain.annotation.ExperimentalRookApi
 import com.rookmotion.rook.sdk.domain.enums.BackgroundReadStatus
 import com.rookmotion.rook.sdk.domain.enums.HealthConnectAvailability
 import com.rookmotion.rook.sdk.domain.enums.RequestPermissionsStatus
-import com.rookmotion.rook.sdk.domain.model.DailyCalories
 import com.rookmotion.rook.sdk.domain.model.HCActivityEvent
 import com.rookmotion.rook.sdk.domain.model.HCBodySummary
+import com.rookmotion.rook.sdk.domain.model.HCCalories
 import com.rookmotion.rook.sdk.domain.model.HCPhysicalSummary
 import com.rookmotion.rook.sdk.domain.model.HCSleepSummary
 import com.rookmotion.rook.sdk.domain.model.RookConfiguration
 import com.rookmotion.rook.sdk.domain.model.SyncStatusWithData
 import com.rookmotion.rook.sdk.domain.model.SyncType
-import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.extension.toEither
-import io.tryrook.rooknative.core.presentation.error.toHealthError
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -54,11 +53,6 @@ class RookHealthConnectRepository @Inject constructor(
 
     suspend fun syncUserTimeZone(): Either<HealthError, Unit> {
         return rookConfigurationManager.syncUserTimeZone()
-            .toEither { it.toHealthError() }
-    }
-
-    suspend fun clearUserID(): Either<HealthError, Unit> {
-        return rookConfigurationManager.clearUserID()
             .toEither { it.toHealthError() }
     }
 
@@ -108,9 +102,20 @@ class RookHealthConnectRepository @Inject constructor(
     }
 
     suspend fun sync(date: LocalDate): Either<HealthError, Unit> {
-        return rookSyncManager.sync(date)
-            .map { }
-            .toEither { it.toHealthError() }
+        return Either.catch {
+            val result = rookSyncManager.sync(date)
+
+            // Use getOrThrow if you want to throw an exception if a least one is not successful
+            val sleepSummaryStatus = result.sleepSummary.getOrNull()
+            val physicalSummaryStatus = result.physicalSummary.getOrNull()
+            val bodySummaryStatus = result.bodySummary.getOrNull()
+
+            Timber.i("Sleep Summary Status: $sleepSummaryStatus")
+            Timber.i("Physical Summary Status: $physicalSummaryStatus")
+            Timber.i("Body Summary Status: $bodySummaryStatus")
+        }.mapLeft {
+            it.toHealthError()
+        }
     }
 
     suspend fun sync(date: LocalDate, summary: SyncType.Summary): Either<HealthError, Unit> {
@@ -158,7 +163,7 @@ class RookHealthConnectRepository @Inject constructor(
             .toEither { it.toHealthError() }
     }
 
-    suspend fun getTodayCaloriesCount(): Either<HealthError, SyncStatusWithData<DailyCalories>> {
+    suspend fun getTodayCaloriesCount(): Either<HealthError, SyncStatusWithData<HCCalories>> {
         return rookSyncManager.getTodayCaloriesCount()
             .toEither { it.toHealthError() }
     }

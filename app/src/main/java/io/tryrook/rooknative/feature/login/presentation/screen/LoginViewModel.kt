@@ -7,14 +7,17 @@ import arrow.core.raise.either
 import com.rookmotion.rook.sdk.domain.environment.RookEnvironment
 import com.rookmotion.rook.sdk.domain.model.RookConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.tryrook.api.sources.domain.environment.ApiEnvironment
+import io.tryrook.api.sources.domain.model.ApiConfiguration
 import io.tryrook.rooknative.BuildConfig
 import io.tryrook.rooknative.R
-import io.tryrook.rooknative.core.domain.error.HealthError
 import io.tryrook.rooknative.core.domain.repository.AuthRepository
-import io.tryrook.rooknative.core.presentation.error.toUiText
 import io.tryrook.rooknative.core.presentation.text.UIText
+import io.tryrook.rooknative.core.rook.HealthError
+import io.tryrook.rooknative.core.rook.RookApiHealthRepository
 import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
 import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
+import io.tryrook.rooknative.core.rook.toUiText
 import io.tryrook.rooknative.di.IO
 import io.tryrook.rooknative.feature.login.domain.model.LoginAction
 import io.tryrook.rooknative.feature.login.domain.model.LoginEvent
@@ -37,6 +40,7 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val healthConnectRepository: RookHealthConnectRepository,
     private val samsungHealthRepository: RookSamsungHealthRepository,
+    private val apiHealthRepository: RookApiHealthRepository,
 ) : ViewModel() {
     private val _events = Channel<LoginEvent>()
     val events = _events.receiveAsFlow()
@@ -102,18 +106,28 @@ class LoginViewModel @Inject constructor(
         return either {
             val healthConnectConfiguration = RookConfiguration(
                 clientUUID = BuildConfig.CLIENT_UUID,
-                secretKey = BuildConfig.SECRET_KEY,
+                secret = BuildConfig.SECRET,
                 environment = RookEnvironment.SANDBOX,
+                packageName = BuildConfig.PACKAGE_NAME
             )
 
             val samsungHealthConfiguration = SHConfiguration(
                 clientUUID = BuildConfig.CLIENT_UUID,
-                secretKey = BuildConfig.SECRET_KEY,
+                secret = BuildConfig.SECRET,
                 environment = SHEnvironment.SANDBOX,
+                packageName = BuildConfig.PACKAGE_NAME
+            )
+
+            val apiConfiguration = ApiConfiguration(
+                clientUUID = BuildConfig.CLIENT_UUID,
+                secret = BuildConfig.SECRET,
+                environment = ApiEnvironment.SANDBOX,
+                packageName = BuildConfig.PACKAGE_NAME
             )
 
             healthConnectRepository.initRook(healthConnectConfiguration).bind()
             samsungHealthRepository.initRook(samsungHealthConfiguration).bind()
+            apiHealthRepository.initRook(apiConfiguration)
         }
     }
 

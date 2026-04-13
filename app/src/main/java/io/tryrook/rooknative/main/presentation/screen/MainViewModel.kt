@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.domain.environment.RookEnvironment
 import com.rookmotion.rook.sdk.domain.model.RookConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.tryrook.api.sources.domain.environment.ApiEnvironment
+import io.tryrook.api.sources.domain.model.ApiConfiguration
 import io.tryrook.rooknative.BuildConfig
 import io.tryrook.rooknative.core.domain.repository.AuthRepository
+import io.tryrook.rooknative.core.rook.RookApiHealthRepository
 import io.tryrook.rooknative.core.rook.RookHealthConnectRepository
 import io.tryrook.rooknative.core.rook.RookSamsungHealthRepository
 import io.tryrook.rooknative.di.IO
@@ -28,9 +31,10 @@ class MainViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val healthConnectRepository: RookHealthConnectRepository,
     private val samsungHealthRepository: RookSamsungHealthRepository,
+    private val apiHealthRepository: RookApiHealthRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<MainState>(MainState())
+    private val _uiState = MutableStateFlow(MainState())
     val uiState get() = _uiState.asStateFlow()
 
     init {
@@ -45,14 +49,23 @@ class MainViewModel @Inject constructor(
     private suspend fun initSDKs() {
         val healthConnectConfiguration = RookConfiguration(
             clientUUID = BuildConfig.CLIENT_UUID,
-            secretKey = BuildConfig.SECRET_KEY,
+            secret = BuildConfig.SECRET,
             environment = RookEnvironment.SANDBOX,
+            packageName = BuildConfig.PACKAGE_NAME
         )
 
         val samsungHealthConfiguration = SHConfiguration(
             clientUUID = BuildConfig.CLIENT_UUID,
-            secretKey = BuildConfig.SECRET_KEY,
+            secret = BuildConfig.SECRET,
             environment = SHEnvironment.SANDBOX,
+            packageName = BuildConfig.PACKAGE_NAME
+        )
+
+        val apiConfiguration = ApiConfiguration(
+            clientUUID = BuildConfig.CLIENT_UUID,
+            secret = BuildConfig.SECRET,
+            environment = ApiEnvironment.SANDBOX,
+            packageName = BuildConfig.PACKAGE_NAME
         )
 
         healthConnectRepository.initRook(healthConnectConfiguration).fold(
@@ -72,6 +85,8 @@ class MainViewModel @Inject constructor(
                 Timber.i("Rook Samsung SDK initialized")
             },
         )
+
+        apiHealthRepository.initRook(apiConfiguration)
     }
 
     private suspend fun initUsersIfNecessary() {

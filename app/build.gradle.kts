@@ -16,17 +16,18 @@ localProperties.load(FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace = "io.tryrook.rooknative"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.tryrook.rooknative"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = 29
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         buildConfigField("String", "CLIENT_UUID", "\"${localProperties["clientUUID"]}\"")
-        buildConfigField("String", "SECRET_KEY", "\"${localProperties["secretKey"]}\"")
+        buildConfigField("String", "SECRET", "\"${localProperties["secret"]}\"")
+        buildConfigField("String", "PACKAGE_NAME", "\"${localProperties["packageName"]}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -113,10 +114,12 @@ dependencies {
 
     implementation(libs.com.rookmotion.android.rook.sdk)
     implementation(libs.io.tryrook.android.rook.sdk.samsung)
+    implementation(libs.io.tryrook.android.rook.api.sources)
+
     implementation(libs.androidx.browser)
     implementation(libs.com.kizitonwose.calendar.compose)
 
-    implementation(files("$rootDir/libs/samsung-health-data-api-1.0.0-b2.aar"))
+    implementation(files("$rootDir/libs/samsung-health-data-api-1.0.0.aar"))
     implementation(libs.com.google.code.gson)
 
     implementation(libs.cafe.adriel.voyager.navigator)
