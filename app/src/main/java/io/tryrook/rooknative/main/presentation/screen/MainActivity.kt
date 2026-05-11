@@ -4,6 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,6 +20,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
@@ -23,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.metadata
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
@@ -57,6 +69,8 @@ private fun MainContent() {
             val lifecycleOwner = LocalLifecycleOwner.current
             val stateFlow = lifecycleOwner.lifecycle.currentStateFlow
             val currentLifecycleState by stateFlow.collectAsState()
+
+            var useCustomAnimationForHome by rememberSaveable { mutableStateOf(false) }
 
             LaunchedEffect(currentLifecycleState) {
                 println("----------------------------------------------------")
@@ -108,6 +122,21 @@ private fun MainContent() {
                     rememberSaveableStateHolderNavEntryDecorator(),
                     rememberViewModelStoreNavEntryDecorator(),
                 ),
+                transitionSpec = {
+                    // Slide in from right when navigating forward
+                    slideInHorizontally(initialOffsetX = { it }) togetherWith
+                            slideOutHorizontally(targetOffsetX = { -it })
+                },
+                popTransitionSpec = {
+                    // Slide in from left when navigating back
+                    slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                            slideOutHorizontally(targetOffsetX = { it })
+                },
+                predictivePopTransitionSpec = {
+                    // Slide in from left when navigating back
+                    slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                            slideOutHorizontally(targetOffsetX = { it })
+                },
                 entryProvider = entryProvider {
                     entry<Login> {
                         val viewModel = viewModel<LoginViewModel>()
@@ -128,7 +157,35 @@ private fun MainContent() {
                             }
                         )
                     }
-                    entry<Home> {
+                    entry<Home>(
+                        metadata = metadata {
+                            if (useCustomAnimationForHome) {
+                                put(NavDisplay.TransitionKey) {
+                                    // Slide new content up, keeping the old content in place underneath
+                                    slideInVertically(
+                                        initialOffsetY = { it },
+                                        animationSpec = tween(1000)
+                                    ) togetherWith ExitTransition.KeepUntilTransitionsFinished
+                                }
+                                put(NavDisplay.PopTransitionKey) {
+                                    // Slide old content down, revealing the new content in place underneath
+                                    EnterTransition.None togetherWith
+                                            slideOutVertically(
+                                                targetOffsetY = { it },
+                                                animationSpec = tween(1000)
+                                            )
+                                }
+                                put(NavDisplay.PredictivePopTransitionKey) {
+                                    // Slide old content down, revealing the new content in place underneath
+                                    EnterTransition.None togetherWith
+                                            slideOutVertically(
+                                                targetOffsetY = { it },
+                                                animationSpec = tween(1000)
+                                            )
+                                }
+                            }
+                        }
+                    ) {
                         val lifecycleOwner2 = LocalLifecycleOwner.current
                         val stateFlow2 = lifecycleOwner2.lifecycle.currentStateFlow
                         val currentLifecycleState2 by stateFlow2.collectAsState()
