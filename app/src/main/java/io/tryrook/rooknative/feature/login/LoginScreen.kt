@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.core.presentation.component.HorizontalExpandedSpacer
@@ -38,16 +39,29 @@ import io.tryrook.rooknative.ui.theme.RookNativeTheme
 fun LoginScreenRoot(viewModel: LoginViewModel, toHome: () -> Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    LifecycleResumeEffect(Unit) {
+        println("----------------------------------------------------")
+        println("LifecycleResumeEffect-LoginScreenRoot----------------------------------------------------")
+
+        onPauseOrDispose {
+            println("----------------------------------------------------")
+            println("onPauseOrDispose-LoginScreenRoot----------------------------------------------------")
+        }
+    }
+
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        println("ON RESUME----------------------------------------------------LoginScreen2")
+        println("----------------------------------------------------")
+        println("LifecycleEventEffect-ON_RESUME-LoginScreenRoot----------------------------------------------------")
     }
 
     DisposableEffect(key1 = lifecycleOwner) {
         val lifecycleEventObserver = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                println("ON RESUME----------------------------------------------------LoginScreen")
+                println("----------------------------------------------------")
+                println("DisposableEffect-ON_RESUME-LoginScreenRoot----------------------------------------------------")
             } else {
-                println("UNHANDLED: ${event.name}")
+                println("----------------------------------------------------")
+                println("DisposableEffect-UNHANDLED-LoginScreenRoot-${event.name}---------------------------------------------------")
             }
         }
 
@@ -58,15 +72,19 @@ fun LoginScreenRoot(viewModel: LoginViewModel, toHome: () -> Unit) {
         }
     }
 
+    LaunchedEffect(Unit) {
+        println("----------------------------------------------------")
+        println("LaunchedEffect-LoginScreenRoot----------------------------------------------------")
+    }
+
     LoginScreen(toHome = toHome)
 }
 
 @Composable
 private fun LoginScreen(toHome: () -> Unit) {
-    println("------------------------------------------------------------------LoginScreen")
-
     LaunchedEffect(Unit) {
-        println("Launched----------------------------------------------------------LoginScreen")
+        println("----------------------------------------------------")
+        println("LaunchedEffect-LoginScreen----------------------------------------------------")
     }
 
     Column(

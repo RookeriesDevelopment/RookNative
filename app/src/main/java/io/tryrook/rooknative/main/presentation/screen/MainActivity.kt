@@ -16,16 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import io.tryrook.rooknative.feature.home.HomeScreenRoot
 import io.tryrook.rooknative.feature.home.HomeViewModel
 import io.tryrook.rooknative.feature.login.LoginScreenRoot
@@ -60,17 +60,32 @@ private fun MainContent() {
 
             LaunchedEffect(currentLifecycleState) {
                 println("----------------------------------------------------")
-                println("Changed to: ${currentLifecycleState.name}")
+                println("Scaffold Changed to: ${currentLifecycleState.name}")
+            }
+
+            LifecycleResumeEffect(Unit) {
+                println("----------------------------------------------------")
+                println("LifecycleResumeEffect-Scaffold----------------------------------------------------")
+
+                onPauseOrDispose {
+                    println("----------------------------------------------------")
+                    println("onPauseOrDispose-Scaffold----------------------------------------------------")
+                }
+            }
+
+            LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+                println("----------------------------------------------------")
+                println("LifecycleEventEffect-ON_RESUME-Scaffold----------------------------------------------------")
             }
 
             DisposableEffect(key1 = lifecycleOwner) {
                 val lifecycleEventObserver = LifecycleEventObserver { _, event ->
                     if (event == Lifecycle.Event.ON_RESUME) {
                         println("----------------------------------------------------")
-                        println("ON RESUME")
+                        println("DisposableEffect-ON_RESUME-Scaffold----------------------------------------------------")
                     } else {
                         println("----------------------------------------------------")
-                        println("UNHANDLED: ${event.name}")
+                        println("DisposableEffect-UNHANDLED-Scaffold-${event.name}---------------------------------------------------")
                     }
                 }
 
@@ -85,12 +100,12 @@ private fun MainContent() {
                 modifier = Modifier.padding(innerPadding),
                 backStack = backStack,
                 onBack = {
-                    println("removing: $it destinations")
-                    backStack.removeLastOrNull()
+                    val removed = backStack.removeLastOrNull()
+
+                    println("Destination: $removed was removed")
                 },
                 entryDecorators = listOf(
-                    rememberSceneSetupNavEntryDecorator(),
-                    rememberSavedStateNavEntryDecorator(),
+                    rememberSaveableStateHolderNavEntryDecorator(),
                     rememberViewModelStoreNavEntryDecorator(),
                 ),
                 entryProvider = entryProvider {
@@ -103,7 +118,7 @@ private fun MainContent() {
 
                         LaunchedEffect(currentLifecycleState2) {
                             println("----------------------------------------------------")
-                            println("Changed to2: ${currentLifecycleState2.name}")
+                            println("entry<Login> Changed to: ${currentLifecycleState2.name}")
                         }
 
                         LoginScreenRoot(
@@ -114,6 +129,15 @@ private fun MainContent() {
                         )
                     }
                     entry<Home> {
+                        val lifecycleOwner2 = LocalLifecycleOwner.current
+                        val stateFlow2 = lifecycleOwner2.lifecycle.currentStateFlow
+                        val currentLifecycleState2 by stateFlow2.collectAsState()
+
+                        LaunchedEffect(currentLifecycleState2) {
+                            println("----------------------------------------------------")
+                            println("entry<Home> Changed to: ${currentLifecycleState2.name}")
+                        }
+
                         val viewModel = viewModel<HomeViewModel>()
                         HomeScreenRoot(viewModel)
                     }

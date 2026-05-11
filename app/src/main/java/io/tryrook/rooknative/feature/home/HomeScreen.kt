@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.tryrook.rooknative.R
 import io.tryrook.rooknative.ui.theme.RookNativeTheme
@@ -26,14 +27,29 @@ import io.tryrook.rooknative.ui.theme.RookNativeTheme
 fun HomeScreenRoot(viewModel: HomeViewModel) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    LifecycleResumeEffect(Unit) {
+        println("----------------------------------------------------")
+        println("LifecycleResumeEffect-HomeScreenRoot----------------------------------------------------")
+
+        onPauseOrDispose {
+            println("----------------------------------------------------")
+            println("onPauseOrDispose-HomeScreenRoot----------------------------------------------------")
+        }
+    }
+
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        println("ON RESUME----------------------------------------------------HomeScreen2")
+        println("----------------------------------------------------")
+        println("LifecycleEventEffect-ON_RESUME-HomeScreenRoot----------------------------------------------------")
     }
 
     DisposableEffect(key1 = lifecycleOwner) {
         val lifecycleEventObserver = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                println("ON RESUME----------------------------------------------------HomeScreen")
+                println("----------------------------------------------------")
+                println("DisposableEffect-ON_RESUME-HomeScreenRoot----------------------------------------------------")
+            } else {
+                println("----------------------------------------------------")
+                println("DisposableEffect-UNHANDLED-HomeScreenRoot-${event.name}---------------------------------------------------")
             }
         }
 
@@ -44,15 +60,19 @@ fun HomeScreenRoot(viewModel: HomeViewModel) {
         }
     }
 
+    LaunchedEffect(Unit) {
+        println("----------------------------------------------------")
+        println("LaunchedEffect-HomeScreenRoot----------------------------------------------------")
+    }
+
     HomeScreen()
 }
 
 @Composable
 private fun HomeScreen() {
-    println("------------------------------------------------------------------HomeScreen")
-
     LaunchedEffect(Unit) {
-        println("Launched----------------------------------------------------------HomeScreen")
+        println("----------------------------------------------------")
+        println("LaunchedEffect-HomeScreen----------------------------------------------------")
     }
 
     Column(
