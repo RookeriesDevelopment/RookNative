@@ -38,49 +38,12 @@ class AndroidStepsViewModel @Inject constructor(
             AndroidStepsAction.OnOpenSettingsClick -> launcher.openApplicationSettings()
 
             is AndroidStepsAction.OnPermissionsChanged -> {
-                viewModelScope.launch(dispatcher) {
-                    _uiState.update {
-                        it.copy(
-                            permissionsGranted = action.permissionsGranted,
-                            shouldRequestPermissions = action.shouldRequestPermissions,
-                            showGrantPermissionsButton = if (action.shouldRequestPermissions) {
-                                !action.permissionsGranted
-                            } else {
-                                false
-                            },
-                            showOpenSettingsButton = !action.permissionsGranted && !action.shouldRequestPermissions,
-                        )
-                    }
-
-                    if (!action.permissionsGranted) {
-                        _events.send(AndroidStepsEvent.MissingPermissions)
-                    }
-                }
+                permissionsChanged(action.permissionsGranted, action.shouldRequestPermissions)
             }
 
-            AndroidStepsAction.OnGrantPermissionsClick -> {
-                val result = stepsRepository.requestAndroidPermissions()
+            AndroidStepsAction.OnGrantPermissionsClick -> grantPermissions()
 
-                if (result == RequestPermissionsStatus.ALREADY_GRANTED) {
-                    _uiState.update {
-                        it.copy(
-                            permissionsGranted = true,
-                            showGrantPermissionsButton = false,
-                        )
-                    }
-                }
-            }
-
-            AndroidStepsAction.OnConnectClick -> {
-                viewModelScope.launch(dispatcher) {
-                    if (_uiState.value.permissionsGranted) {
-                        stepsRepository.enableBackgroundAndroidSteps()
-                        _events.send(AndroidStepsEvent.AndroidStepsEnabled)
-                    } else {
-                        _events.send(AndroidStepsEvent.MissingPermissions)
-                    }
-                }
-            }
+            AndroidStepsAction.OnConnectClick -> connect()
         }
     }
 
@@ -93,6 +56,51 @@ class AndroidStepsViewModel @Inject constructor(
                     permissionsGranted = permissionsGranted,
                     showGrantPermissionsButton = !permissionsGranted,
                 )
+            }
+        }
+    }
+
+    private fun permissionsChanged(permissionsGranted: Boolean, shouldRequestPermissions: Boolean) {
+        viewModelScope.launch(dispatcher) {
+            _uiState.update {
+                it.copy(
+                    permissionsGranted = permissionsGranted,
+                    shouldRequestPermissions = shouldRequestPermissions,
+                    showGrantPermissionsButton = if (shouldRequestPermissions) {
+                        !permissionsGranted
+                    } else {
+                        false
+                    },
+                    showOpenSettingsButton = !permissionsGranted && !shouldRequestPermissions,
+                )
+            }
+
+            if (!permissionsGranted) {
+                _events.send(AndroidStepsEvent.MissingPermissions)
+            }
+        }
+    }
+
+    private fun grantPermissions() {
+        val result = stepsRepository.requestAndroidPermissions()
+
+        if (result == RequestPermissionsStatus.ALREADY_GRANTED) {
+            _uiState.update {
+                it.copy(
+                    permissionsGranted = true,
+                    showGrantPermissionsButton = false,
+                )
+            }
+        }
+    }
+
+    private fun connect() {
+        viewModelScope.launch(dispatcher) {
+            if (_uiState.value.permissionsGranted) {
+                stepsRepository.enableBackgroundAndroidSteps()
+                _events.send(AndroidStepsEvent.AndroidStepsEnabled)
+            } else {
+                _events.send(AndroidStepsEvent.MissingPermissions)
             }
         }
     }

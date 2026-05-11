@@ -8,7 +8,8 @@ sealed interface HealthConnectAction {
     data object OnOpenSettingsClick : HealthConnectAction
 
     data class OnPermissionsChanged(
-        val dataTypesPermissions: Boolean,
+        val allDataTypesPermissions: Boolean,
+        val partialDataTypesPermissions: Boolean,
         val backgroundPermissions: Boolean,
     ) : HealthConnectAction
 

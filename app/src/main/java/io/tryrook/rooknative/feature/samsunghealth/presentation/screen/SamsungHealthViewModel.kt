@@ -48,50 +48,12 @@ class SamsungHealthViewModel @Inject constructor(
             SamsungHealthAction.OnOpenSamsungHealthClick -> launcher.openSamsungHealthSettings()
 
             is SamsungHealthAction.OnPermissionsChanged -> {
-                viewModelScope.launch(dispatcher) {
-                    val permissionsGranted = action.allPermissions || action.partialPermissions
-
-                    _uiState.update {
-                        it.copy(
-                            permissionsGranted = permissionsGranted,
-                            showAllowAccessButton = !action.allPermissions,
-                        )
-                    }
-
-                    if (!permissionsGranted) {
-                        _events.send(SamsungHealthEvent.MissingPermissions)
-                    }
-                }
+                permissionsChanged(action.allPermissions, action.partialPermissions)
             }
 
-            SamsungHealthAction.OnAllowAccessClick -> {
-                viewModelScope.launch(dispatcher) {
-                    val result = samsungHealthRepository.requestSamsungHealthPermissions(
-                        samsungPermissions,
-                    ).getOrElse { SHRequestPermissionsStatus.REQUEST_SENT }
+            SamsungHealthAction.OnAllowAccessClick -> allowAccess()
 
-                    if (result == SHRequestPermissionsStatus.ALREADY_GRANTED) {
-                        _uiState.update {
-                            it.copy(
-                                permissionsGranted = true,
-                                showAllowAccessButton = false,
-                            )
-                        }
-                    }
-                }
-            }
-
-            SamsungHealthAction.OnConnectClick -> {
-                viewModelScope.launch(dispatcher) {
-                    if (_uiState.value.permissionsGranted) {
-                        samsungHealthRepository.schedule(enableLogs = BuildConfig.DEBUG)
-                        appPreferences.toggleSamsungHealth(true)
-                        _events.send(SamsungHealthEvent.BackgroundSyncEnabled)
-                    } else {
-                        _events.send(SamsungHealthEvent.MissingPermissions)
-                    }
-                }
-            }
+            SamsungHealthAction.OnConnectClick -> connect()
         }
     }
 
@@ -130,6 +92,53 @@ class SamsungHealthViewModel @Inject constructor(
             )
         }
     }
+
+    private fun permissionsChanged(allPermissions: Boolean, partialPermissions: Boolean) {
+        viewModelScope.launch(dispatcher) {
+            val permissionsGranted = allPermissions || partialPermissions
+
+            _uiState.update {
+                it.copy(
+                    permissionsGranted = permissionsGranted,
+                    showAllowAccessButton = !allPermissions,
+                )
+            }
+
+            if (!permissionsGranted) {
+                _events.send(SamsungHealthEvent.MissingPermissions)
+            }
+        }
+    }
+
+    private fun allowAccess() {
+        viewModelScope.launch(dispatcher) {
+            val result = samsungHealthRepository.requestSamsungHealthPermissions(samsungPermissions)
+                .getOrElse {
+                    SHRequestPermissionsStatus.REQUEST_SENT
+                }
+
+            if (result == SHRequestPermissionsStatus.ALREADY_GRANTED) {
+                _uiState.update {
+                    it.copy(
+                        permissionsGranted = true,
+                        showAllowAccessButton = false,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun connect() {
+        viewModelScope.launch(dispatcher) {
+            if (_uiState.value.permissionsGranted) {
+                samsungHealthRepository.schedule(enableLogs = BuildConfig.DEBUG)
+                appPreferences.toggleSamsungHealth(true)
+                _events.send(SamsungHealthEvent.BackgroundSyncEnabled)
+            } else {
+                _events.send(SamsungHealthEvent.MissingPermissions)
+            }
+        }
+    }
 }
 
 private val samsungPermissions: Set<SamsungHealthPermission> = setOf(
@@ -146,4 +155,5 @@ private val samsungPermissions: Set<SamsungHealthPermission> = setOf(
     SamsungHealthPermission.SLEEP,
     SamsungHealthPermission.STEPS,
     SamsungHealthPermission.WATER_INTAKE,
+    SamsungHealthPermission.BODY_TEMPERATURE,
 )

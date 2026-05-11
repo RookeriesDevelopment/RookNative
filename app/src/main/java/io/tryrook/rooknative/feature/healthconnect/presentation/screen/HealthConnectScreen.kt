@@ -108,8 +108,6 @@ class HealthConnectScreenDestination : Screen {
                         /* defaultValue = */ false
                     ) == true
 
-                    val dataTypesPermissions = allPermissions || partialPermissions
-
                     val backgroundPermissions = intent?.getBooleanExtra(
                         /* name = */ RookPermissionsManager.EXTRA_HEALTH_CONNECT_BACKGROUND_PERMISSION_GRANTED,
                         /* defaultValue = */ false
@@ -117,7 +115,8 @@ class HealthConnectScreenDestination : Screen {
 
                     viewModel.onAction(
                         HealthConnectAction.OnPermissionsChanged(
-                            dataTypesPermissions = dataTypesPermissions,
+                            allDataTypesPermissions = allPermissions,
+                            partialDataTypesPermissions = partialPermissions,
                             backgroundPermissions = backgroundPermissions,
                         )
                     )

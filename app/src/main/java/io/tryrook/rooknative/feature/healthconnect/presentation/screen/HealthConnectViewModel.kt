@@ -31,7 +31,6 @@ class HealthConnectViewModel @Inject constructor(
     private val appPreferences: AppPreferences,
     private val launcher: Launcher,
 ) : ViewModel() {
-
     private val _events = Channel<HealthConnectEvent>()
     val events = _events.receiveAsFlow()
 
@@ -44,86 +43,19 @@ class HealthConnectViewModel @Inject constructor(
 
             HealthConnectAction.OnDownloadClick -> launcher.openHealthConnectOnPlayStore()
 
-            HealthConnectAction.OnOpenSettingsClick -> {
-                healthConnectRepository.openHealthConnectSettings()
-            }
+            HealthConnectAction.OnOpenSettingsClick -> healthConnectRepository.openHealthConnectSettings()
 
             is HealthConnectAction.OnPermissionsChanged -> {
-                viewModelScope.launch(dispatcher) {
-                    val permissionsGranted =
-                        action.dataTypesPermissions && action.backgroundPermissions
-
-                    _uiState.update {
-                        it.copy(
-                            dataTypesGranted = action.dataTypesPermissions,
-                            backgroundGranted = action.backgroundPermissions,
-                            showAllowAccessButton = !permissionsGranted,
-                            showOpenSettingsButton = !permissionsGranted,
-                        )
-                    }
-
-                    when {
-                        !action.backgroundPermissions && !action.dataTypesPermissions -> {
-                            _events.send(HealthConnectEvent.MissingPermissions)
-                        }
-
-                        !action.backgroundPermissions -> {
-                            _events.send(HealthConnectEvent.MissingBackgroundPermissions)
-                        }
-
-                        !action.dataTypesPermissions -> {
-                            _events.send(HealthConnectEvent.MissingDataTypesPermissions)
-                        }
-                    }
-                }
+                permissionsChanged(
+                    allDataTypesPermissions = action.allDataTypesPermissions,
+                    partialDataTypesPermissions = action.partialDataTypesPermissions,
+                    backgroundPermissions = action.backgroundPermissions,
+                )
             }
 
-            HealthConnectAction.OnAllowAccessClick -> {
-                viewModelScope.launch(dispatcher) {
-                    val result = healthConnectRepository.requestHealthConnectPermissions()
-                        .getOrElse { RequestPermissionsStatus.REQUEST_SENT }
+            HealthConnectAction.OnAllowAccessClick -> allowAccess()
 
-                    if (result == RequestPermissionsStatus.ALREADY_GRANTED) {
-                        _uiState.update {
-                            it.copy(
-                                dataTypesGranted = true,
-                                backgroundGranted = true,
-                                showAllowAccessButton = false,
-                                showOpenSettingsButton = false,
-                            )
-                        }
-                    } else {
-                        _uiState.update { it.copy(showOpenSettingsButton = true) }
-                    }
-                }
-            }
-
-            HealthConnectAction.OnConnectClick -> {
-                viewModelScope.launch(dispatcher) {
-                    val shouldConnect = _uiState.value.dataTypesGranted
-                            && _uiState.value.backgroundGranted
-
-                    if (shouldConnect) {
-                        healthConnectRepository.schedule(BuildConfig.DEBUG)
-                        appPreferences.toggleHealthConnect(true)
-                        _events.send(HealthConnectEvent.BackgroundSyncEnabled)
-                    } else {
-                        when {
-                            !_uiState.value.backgroundGranted && !_uiState.value.dataTypesGranted -> {
-                                _events.send(HealthConnectEvent.MissingPermissions)
-                            }
-
-                            !_uiState.value.backgroundGranted -> {
-                                _events.send(HealthConnectEvent.MissingBackgroundPermissions)
-                            }
-
-                            !_uiState.value.dataTypesGranted -> {
-                                _events.send(HealthConnectEvent.MissingDataTypesPermissions)
-                            }
-                        }
-                    }
-                }
-            }
+            HealthConnectAction.OnConnectClick -> connect()
         }
     }
 
@@ -167,6 +99,85 @@ class HealthConnectViewModel @Inject constructor(
             }
         }
     }
+
+    private fun permissionsChanged(
+        allDataTypesPermissions: Boolean,
+        partialDataTypesPermissions: Boolean,
+        backgroundPermissions: Boolean
+    ) {
+        viewModelScope.launch(dispatcher) {
+            val dataTypesPermissions = allDataTypesPermissions || partialDataTypesPermissions
+            val permissionsGranted = dataTypesPermissions && backgroundPermissions
+
+            _uiState.update {
+                it.copy(
+                    dataTypesGranted = dataTypesPermissions,
+                    backgroundGranted = backgroundPermissions,
+                    showAllowAccessButton = !permissionsGranted,
+                    showOpenSettingsButton = !allDataTypesPermissions || !backgroundPermissions,
+                )
+            }
+
+            when {
+                !backgroundPermissions && !dataTypesPermissions -> {
+                    _events.send(HealthConnectEvent.MissingPermissions)
+                }
+
+                !backgroundPermissions -> {
+                    _events.send(HealthConnectEvent.MissingBackgroundPermissions)
+                }
+
+                !dataTypesPermissions -> {
+                    _events.send(HealthConnectEvent.MissingDataTypesPermissions)
+                }
+            }
+        }
+    }
+
+    private fun allowAccess() {
+        viewModelScope.launch(dispatcher) {
+            val result = healthConnectRepository.requestHealthConnectPermissions().getOrElse {
+                RequestPermissionsStatus.REQUEST_SENT
+            }
+
+            if (result == RequestPermissionsStatus.ALREADY_GRANTED) {
+                _uiState.update {
+                    it.copy(
+                        dataTypesGranted = true,
+                        backgroundGranted = true,
+                        showAllowAccessButton = false,
+                        showOpenSettingsButton = false,
+                    )
+                }
+            } else {
+                _uiState.update { it.copy(showOpenSettingsButton = true) }
+            }
+        }
+    }
+
+    private fun connect() {
+        viewModelScope.launch(dispatcher) {
+            val shouldConnect = _uiState.value.dataTypesGranted && _uiState.value.backgroundGranted
+
+            if (shouldConnect) {
+                healthConnectRepository.schedule(BuildConfig.DEBUG)
+                appPreferences.toggleHealthConnect(true)
+                _events.send(HealthConnectEvent.BackgroundSyncEnabled)
+            } else {
+                when {
+                    !_uiState.value.backgroundGranted && !_uiState.value.dataTypesGranted -> {
+                        _events.send(HealthConnectEvent.MissingPermissions)
+                    }
+
+                    !_uiState.value.backgroundGranted -> {
+                        _events.send(HealthConnectEvent.MissingBackgroundPermissions)
+                    }
+
+                    !_uiState.value.dataTypesGranted -> {
+                        _events.send(HealthConnectEvent.MissingDataTypesPermissions)
+                    }
+                }
+            }
+        }
+    }
 }
-
-
